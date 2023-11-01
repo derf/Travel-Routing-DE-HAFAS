@@ -13,6 +13,7 @@ use Getopt::Long    qw(:config no_ignore_case);
 use List::MoreUtils qw(uniq);
 use List::Util      qw(first max);
 use Travel::Routing::DE::HAFAS;
+use Travel::Status::DE::HAFAS;
 
 my ( $date, $time, $language );
 my $types    = q{};
@@ -158,14 +159,40 @@ sub parse_mot_options {
 }
 
 sub show_similar_stops {
-	my @candidates = $hafas->similar_stops;
-	if (@candidates) {
-		say 'You might want to try one of the following stops:';
-		for my $c (@candidates) {
-			printf( "%s (%s)\n", $c->{name}, $c->{id} );
+	my $hafas_from = Travel::Status::DE::HAFAS->new(
+		service        => $service,
+		language       => $language,
+		developer_mode => $developer_mode,
+		locationSearch => $from_stop,
+	);
+	my $hafas_to = Travel::Status::DE::HAFAS->new(
+		service        => $service,
+		language       => $language,
+		developer_mode => $developer_mode,
+		locationSearch => $to_stop,
+	);
+
+	if (    $hafas_from->results
+		and ( $hafas_from->results )[0]->eva ne $from_stop
+		and ( $hafas_from->results )[0]->name ne $from_stop )
+	{
+		say q{};
+		say 'You might want to try one of the following departure stops:';
+		for my $result ( $hafas_from->results ) {
+			printf( "%8d  %s\n", $result->eva, $result->name );
 		}
 	}
-	return;
+
+	if (    $hafas_to->results
+		and ( $hafas_to->results )[0]->eva ne $to_stop
+		and ( $hafas_to->results )[0]->name ne $to_stop )
+	{
+		say q{};
+		say 'You might want to try one of the following arrival stops:';
+		for my $result ( $hafas_to->results ) {
+			printf( "%8d  %s\n", $result->eva, $result->name );
+		}
+	}
 }
 
 sub display_occupancy {
