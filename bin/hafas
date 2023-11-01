@@ -16,7 +16,7 @@ use Travel::Routing::DE::HAFAS;
 use Travel::Status::DE::HAFAS;
 
 my ( $date, $time, $language );
-my $types    = q{};
+my $types = q{};
 my $developer_mode;
 my $json_output;
 my ( $list_services, $service );
@@ -57,9 +57,9 @@ if ($list_services) {
 
 parse_mot_options();
 
-my ($from_stop, $to_stop) = @ARGV;
+my ( $from_stop, $to_stop ) = @ARGV;
 
-if (not $from_stop and $to_stop) {
+if ( not $from_stop and $to_stop ) {
 	show_help(1);
 }
 
@@ -216,8 +216,10 @@ sub display_occupancy {
 sub display_occupancies {
 	my ($load) = @_;
 
-	if ($load and ($load->{FIRST} or $load->{SECOND})) {
-		return sprintf("[%1s%1s]", display_occupancy($load->{FIRST}), display_occupancy($load->{SECOND}));
+	if ( $load and ( $load->{FIRST} or $load->{SECOND} ) ) {
+		return sprintf( "[%1s%1s]",
+			display_occupancy( $load->{FIRST} ),
+			display_occupancy( $load->{SECOND} ) );
 	}
 
 	return q{    };
@@ -226,7 +228,7 @@ sub display_occupancies {
 sub format_delay {
 	my ($delay) = @_;
 	if ($delay) {
-		return sprintf('(%+4d)', $delay);
+		return sprintf( '(%+4d)', $delay );
 	}
 	return q{};
 }
@@ -246,8 +248,12 @@ if ($json_output) {
 	exit 0;
 }
 
-for my $res (@{$hafas->{results}}) {
-	printf("# %02d:%02d  %s\n", $res->duration->in_units('hours', 'minutes'), display_occupancies($res->load));
+for my $res ( @{ $hafas->{results} } ) {
+	printf(
+		"# %02d:%02d  %s\n",
+		$res->duration->in_units( 'hours', 'minutes' ),
+		display_occupancies( $res->load )
+	);
 	for my $msg ( $res->messages ) {
 		if ( $msg->short ) {
 			printf( "# %s\n", $msg->short );
@@ -257,29 +263,50 @@ for my $res (@{$hafas->{results}}) {
 
 	my $have_delay = 0;
 
-	for my $sec ($res->sections) {
-		if ($sec->dep_delay or $sec->arr_delay) {
+	for my $sec ( $res->sections ) {
+		if ( $sec->dep_delay or $sec->arr_delay ) {
 			$have_delay = 7;
 		}
 	}
 
-	for my $sec ($res->sections) {
-		if ($sec->type eq 'JNY') {
-			printf("%-5s %-${have_delay}s ab  %s\n", $sec->dep_datetime->strftime('%H:%M'), format_delay($sec->dep_delay), $sec->dep_loc->name);
-			printf("%10s%${have_delay}s %s → %s\n", q{}, q{}, $sec->name, $sec->direction);
-			printf("%-5s %-${have_delay}s an  %s\n", $sec->arr_datetime->strftime('%H:%M'), format_delay($sec->arr_delay), $sec->arr_loc->name);
+	for my $sec ( $res->sections ) {
+		if ( $sec->type eq 'JNY' ) {
+			printf(
+				"%-5s %-${have_delay}s ab  %s\n",
+				$sec->dep_datetime->strftime('%H:%M'),
+				format_delay( $sec->dep_delay ),
+				$sec->dep_loc->name
+			);
+			printf( "%10s%${have_delay}s %s → %s\n",
+				q{}, q{}, $sec->name, $sec->direction );
+			printf(
+				"%-5s %-${have_delay}s an  %s\n",
+				$sec->arr_datetime->strftime('%H:%M'),
+				format_delay( $sec->arr_delay ),
+				$sec->arr_loc->name
+			);
 		}
-		elsif ($sec->type eq 'WALK') {
-			printf("%-5s %-${have_delay}s ab  %s\n", $sec->dep_datetime->strftime('%H:%M'), q{}, $sec->dep_loc->name);
-			printf("%10s%${have_delay}s Fußweg %dm (%02d:%02d)\n", q{}, q{}, $sec->distance, $sec->duration->in_units('hours', 'minutes'));
-			printf("%-5s %-${have_delay}s an  %s\n", $sec->arr_datetime->strftime('%H:%M'), q{}, $sec->arr_loc->name);
+		elsif ( $sec->type eq 'WALK' ) {
+			printf(
+				"%-5s %-${have_delay}s ab  %s\n",
+				$sec->dep_datetime->strftime('%H:%M'),
+				q{}, $sec->dep_loc->name
+			);
+			printf( "%10s%${have_delay}s Fußweg %dm (%02d:%02d)\n",
+				q{}, q{}, $sec->distance,
+				$sec->duration->in_units( 'hours', 'minutes' ) );
+			printf(
+				"%-5s %-${have_delay}s an  %s\n",
+				$sec->arr_datetime->strftime('%H:%M'),
+				q{}, $sec->arr_loc->name
+			);
 		}
 		else {
 			printf("\n???\n");
 		}
 		say q{};
 	}
-	printf("\n%s\n\n", q{-} x 40);
+	printf( "\n%s\n\n", q{-} x 40 );
 }
 
 __END__
