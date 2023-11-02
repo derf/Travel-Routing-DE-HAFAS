@@ -24,7 +24,6 @@ our $VERSION = '0.00';
 
 my %hafas_instance = (
 	DB => {
-		stopfinder  => 'https://reiseauskunft.bahn.de/bin/ajax-getstop.exe',
 		mgate       => 'https://reiseauskunft.bahn.de/bin/mgate.exe',
 		name        => 'Deutsche Bahn',
 		productbits => [qw[ice ic_ec d regio s bus ferry u tram ondemand]],
@@ -47,7 +46,6 @@ my %hafas_instance = (
 	},
 	NAHSH => {
 		mgate       => 'https://nah.sh.hafas.de/bin/mgate.exe',
-		stopfinder  => 'https://nah.sh.hafas.de/bin/ajax-getstop.exe',
 		name        => 'Nahverkehrsverbund Schleswig-Holstein',
 		productbits => [qw[ice ice ice regio s bus ferry u tram ondemand]],
 		request     => {
@@ -66,7 +64,6 @@ my %hafas_instance = (
 	},
 	NASA => {
 		mgate       => 'https://reiseauskunft.insa.de/bin/mgate.exe',
-		stopfinder  => 'https://reiseauskunft.insa.de/bin/ajax-getstop.exe',
 		name        => 'Nahverkehrsservice Sachsen-Anhalt',
 		productbits => [qw[ice ice regio regio regio tram bus ondemand]],
 		languages   => [qw[de en]],
@@ -87,9 +84,8 @@ my %hafas_instance = (
 		},
 	},
 	NVV => {
-		mgate      => 'https://auskunft.nvv.de/auskunft/bin/app/mgate.exe',
-		stopfinder =>
-		  'https://auskunft.nvv.de/auskunft/bin/jp/ajax-getstop.exe',
+		mgate => 'https://auskunft.nvv.de/auskunft/bin/app/mgate.exe',
+		'https://auskunft.nvv.de/auskunft/bin/jp/ajax-getstop.exe',
 		name        => 'Nordhessischer VerkehrsVerbund',
 		productbits =>
 		  [qw[ice ic_ec regio s u tram bus bus ferry ondemand regio regio]],
@@ -112,7 +108,6 @@ my %hafas_instance = (
 	},
 	'ÖBB' => {
 		mgate       => 'https://fahrplan.oebb.at/bin/mgate.exe',
-		stopfinder  => 'https://fahrplan.oebb.at/bin/ajax-getstop.exe',
 		name        => 'Österreichische Bundesbahnen',
 		productbits =>
 		  [qw[ice ice ice regio regio s bus ferry u tram ice ondemand ice]],
@@ -133,7 +128,6 @@ my %hafas_instance = (
 	},
 	VBB => {
 		mgate       => 'https://fahrinfo.vbb.de/bin/mgate.exe',
-		stopfinder  => 'https://fahrinfo.vbb.de/bin/ajax-getstop.exe',
 		name        => 'Verkehrsverbund Berlin-Brandenburg',
 		productbits => [qw[s u tram bus ferry ice regio]],
 		languages   => [qw[de en]],
@@ -155,7 +149,6 @@ my %hafas_instance = (
 	},
 	VBN => {
 		mgate       => 'https://fahrplaner.vbn.de/bin/mgate.exe',
-		stopfinder  => 'https://fahrplaner.vbn.de/hafas/ajax-getstop.exe',
 		name        => 'Verkehrsverbund Bremen/Niedersachsen',
 		productbits => [qw[ice ice regio regio s bus ferry u tram ondemand]],
 		salt        => 'SP31mBu' . 'fSyCLmNxp',
