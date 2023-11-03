@@ -84,8 +84,7 @@ my %hafas_instance = (
 		},
 	},
 	NVV => {
-		mgate => 'https://auskunft.nvv.de/auskunft/bin/app/mgate.exe',
-		'https://auskunft.nvv.de/auskunft/bin/jp/ajax-getstop.exe',
+		mgate       => 'https://auskunft.nvv.de/auskunft/bin/app/mgate.exe',
 		name        => 'Nordhessischer VerkehrsVerbund',
 		productbits =>
 		  [qw[ice ic_ec regio s u tram bus bus ferry ondemand regio regio]],
