@@ -287,19 +287,8 @@ for my $res ( @{ $hafas->{results} } ) {
 			);
 		}
 		elsif ( $sec->type eq 'WALK' ) {
-			printf(
-				"%-5s %-${have_delay}s ab  %s\n",
-				$sec->dep_datetime->strftime('%H:%M'),
-				q{}, $sec->dep_loc->name
-			);
-			printf( "%10s%${have_delay}s Fußweg %dm (%02d:%02d)\n",
-				q{}, q{}, $sec->distance,
-				$sec->duration->in_units( 'hours', 'minutes' ) );
-			printf(
-				"%-5s %-${have_delay}s an  %s\n",
-				$sec->arr_datetime->strftime('%H:%M'),
-				q{}, $sec->arr_loc->name
-			);
+			printf( "# Walk %dm  (approx. %d minutes)\n",
+				$sec->distance, $sec->duration->in_units('minutes') );
 		}
 		else {
 			printf("\n???\n");
