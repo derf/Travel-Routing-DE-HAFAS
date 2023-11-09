@@ -14,7 +14,7 @@ use Travel::Routing::DE::HAFAS::Connection::Section;
 our $VERSION = '0.00';
 
 Travel::Routing::DE::HAFAS::Connection->mk_ro_accessors(
-	qw(changes duration sched_dep rt_dep sched_arr rt_arr dep_datetime arr_datetime dep_platform arr_platform dep_loc arr_loc load)
+	qw(changes duration sched_dep rt_dep sched_arr rt_arr dep_datetime arr_datetime dep_platform arr_platform dep_loc arr_loc dep_cancelled arr_cancelled is_cancelled load)
 );
 
 # {{{ Constructor
@@ -95,16 +95,23 @@ sub new {
 		$tco->{ $tco_kv->{c} } = $tco_kv->{r};
 	}
 
+	my $dep_cancelled = $connection->{dep}{dCncl} ? 1 : 0;
+	my $arr_cancelled = $connection->{arr}{aCncl} ? 1 : 0;
+	my $is_cancelled  = $dep_cancelled || $arr_cancelled;
+
 	my $ref = {
-		duration     => $duration,
-		changes      => $connection->{chg},
-		sched_dep    => $sched_dep,
-		rt_dep       => $rt_dep,
-		sched_arr    => $sched_arr,
-		rt_arr       => $rt_arr,
-		dep_datetime => $rt_dep // $sched_dep,
-		arr_datetime => $rt_arr // $sched_arr,
-		dep_platform => $connection->{dep}{dPlatfR}
+		duration      => $duration,
+		changes       => $connection->{chg},
+		sched_dep     => $sched_dep,
+		rt_dep        => $rt_dep,
+		sched_arr     => $sched_arr,
+		rt_arr        => $rt_arr,
+		dep_cancelled => $dep_cancelled,
+		arr_cancelled => $arr_cancelled,
+		is_cancelled  => $is_cancelled,
+		dep_datetime  => $rt_dep // $sched_dep,
+		arr_datetime  => $rt_arr // $sched_arr,
+		dep_platform  => $connection->{dep}{dPlatfR}
 		  // $connection->{dep}{dPlatfS},
 		arr_platform => $connection->{arr}{aPlatfR}
 		  // $connection->{arr}{aPlatfS},
