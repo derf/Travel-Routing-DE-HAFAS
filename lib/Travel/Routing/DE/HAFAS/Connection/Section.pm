@@ -28,6 +28,29 @@ sub new {
 	my $locs  = $opt{locL};
 	my @prodL = @{ $opt{common}{prodL} // [] };
 
+	# himL may only be present in departure monitor mode
+	my @remL = @{ $opt{common}{remL} // [] };
+	my @himL = @{ $opt{common}{himL} // [] };
+
+	my @msgL = (
+		@{ $sec->{dep}{msgL} // [] },
+		@{ $sec->{arr}{msgL} // [] },
+		@{ $sec->{jny}{msgL} // [] }
+	);
+
+	my @messages;
+	for my $msg (@msgL) {
+		if ( $msg->{type} eq 'REM' and defined $msg->{remX} ) {
+			push( @messages, $hafas->add_message( $remL[ $msg->{remX} ] ) );
+		}
+		elsif ( $msg->{type} eq 'HIM' and defined $msg->{himX} ) {
+			push( @messages, $hafas->add_message( $himL[ $msg->{himX} ], 1 ) );
+		}
+		else {
+			say "Unknown message type $msg->{type}";
+		}
+	}
+
 	my $strptime = DateTime::Format::Strptime->new(
 		pattern   => '%Y%m%dT%H%M%S',
 		time_zone => 'Europe/Berlin'
@@ -58,6 +81,7 @@ sub new {
 		arr_datetime => $rt_arr // $sched_arr,
 		dep_loc      => $locs->[ $sec->{dep}{locX} ],
 		arr_loc      => $locs->[ $sec->{arr}{locX} ],
+		messages     => \@messages,
 	};
 
 	if ( $sched_dep and $rt_dep ) {
@@ -109,6 +133,15 @@ sub new {
 # }}}
 
 # {{{ Accessors
+
+sub messages {
+	my ($self) = @_;
+
+	if ( $self->{messages} ) {
+		return @{ $self->{messages} };
+	}
+	return;
+}
 
 # }}}
 
