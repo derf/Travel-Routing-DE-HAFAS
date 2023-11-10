@@ -249,10 +249,18 @@ if ($json_output) {
 }
 
 for my $res ( @{ $hafas->{results} } ) {
+
+	#if ($res->is_cancelled) {
+	#	say "# cancelled\n";
+	#}
+
+	my $glance = join( ' - ',
+		map { $_->name } grep { $_->type eq 'JNY' } $res->sections );
+
 	printf(
-		"# %02d:%02d  %s\n",
+		"# %02d:%02d  %s  %s\n",
 		$res->duration->in_units( 'hours', 'minutes' ),
-		display_occupancies( $res->load )
+		display_occupancies( $res->load ), $glance
 	);
 	for my $msg ( $res->messages ) {
 		if ( $msg->short ) {
@@ -260,6 +268,7 @@ for my $res ( @{ $hafas->{results} } ) {
 		}
 		printf( "# %s\n", $msg->text );
 	}
+	say q{};
 
 	my $have_delay = 0;
 
@@ -291,6 +300,18 @@ for my $res ( @{ $hafas->{results} } ) {
 		}
 		else {
 			printf("\n???\n");
+		}
+		for my $msg ( $sec->messages ) {
+			if ( $msg->code eq 'text.connection.section.arrival.date.deviation'
+				or $msg->code eq
+				'text.connection.section.departure.date.deviation' )
+			{
+				next;
+			}
+			if ( $msg->short ) {
+				printf( "# %s\n", $msg->short );
+			}
+			printf( "# %s\n", $msg->text );
 		}
 		say q{};
 	}
