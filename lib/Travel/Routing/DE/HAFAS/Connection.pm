@@ -89,6 +89,16 @@ sub new {
 		);
 	}
 
+	my $prev;
+	for my $sec (@sections) {
+		if ( $sec->type eq 'JNY' ) {
+			if ($prev) {
+				$sec->set_transfer_from_previous_section($prev);
+			}
+			$prev = $sec;
+		}
+	}
+
 	my $tco = {};
 	for my $tco_id ( @{ $connection->{dTrnCmpSX}{tcocX} // [] } ) {
 		my $tco_kv = $opt{common}{tcocL}[$tco_id];

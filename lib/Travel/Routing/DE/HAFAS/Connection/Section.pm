@@ -13,7 +13,7 @@ use Travel::Routing::DE::HAFAS::Utils;
 our $VERSION = '0.00';
 
 Travel::Routing::DE::HAFAS::Connection::Section->mk_ro_accessors(
-	qw(type schep_dep rt_dep sched_arr rt_arr dep_datetime arr_datetime arr_delay dep_delay journey distance duration dep_loc arr_loc
+	qw(type schep_dep rt_dep sched_arr rt_arr dep_datetime arr_datetime arr_delay dep_delay journey distance duration transfer_duration dep_loc arr_loc
 	  operator id name category category_long class number line line_no load delay direction)
 );
 
@@ -128,6 +128,17 @@ sub new {
 	bless( $ref, $obj );
 
 	return $ref;
+}
+
+# }}}
+
+# {{{ Private
+
+sub set_transfer_from_previous_section {
+	my ( $self, $prev_sec ) = @_;
+
+	my $delta = $self->dep_datetime - $prev_sec->arr_datetime;
+	$self->{transfer_duration} = $delta;
 }
 
 # }}}
