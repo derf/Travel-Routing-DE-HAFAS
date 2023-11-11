@@ -9,7 +9,7 @@ requires 'List::MoreUtils';
 requires 'List::Util';
 requires 'LWP::UserAgent';
 requires 'LWP::Protocol::https';
-requires 'Travel::Status::DE::HAFAS::Message';
+requires 'Travel::Status::DE::HAFAS::Message', '4.19';
 
 #on test => sub {
 #	requires 'File::Slurp';
