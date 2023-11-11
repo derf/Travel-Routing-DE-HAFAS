@@ -295,7 +295,7 @@ for my $res ( @{ $hafas->{results} } ) {
 	}
 
 	printf(
-		"# %02d:%02d  %s  %s\n",
+		"%02d:%02d  %s  %s\n",
 		$res->duration->in_units( 'hours', 'minutes' ),
 		display_occupancies( $res->load ), $glance
 	);
@@ -314,7 +314,7 @@ for my $res ( @{ $hafas->{results} } ) {
 
 	for my $sec ( $res->sections ) {
 		if ( $sec->type eq 'JNY' ) {
-			printf( "%s → %s\n", $sec->name, $sec->direction );
+			printf( "\033[1m%s\033[0m → %s\n", $sec->name, $sec->direction );
 			printf(
 				"%-5s %-${have_delay}s ab  %s\n",
 				$sec->dep_datetime->strftime('%H:%M'),
