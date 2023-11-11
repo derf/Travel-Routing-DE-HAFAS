@@ -21,8 +21,18 @@ my $developer_mode;
 my $json_output;
 my ( $list_services, $service );
 my ( @excluded_mots, @exclusive_mots );
+my $verbosity = 0;
 
 my @output;
+my %min_verbosity = (
+	A => 3,
+	C => 1,
+	G => 2,
+	H => 1,
+	L => 0,
+	M => 1,
+	P => 0,
+);
 
 binmode( STDOUT, ':encoding(utf-8)' );
 for my $arg (@ARGV) {
@@ -36,6 +46,7 @@ GetOptions(
 	'm|mot=s'      => \$types,
 	's|service=s'  => \$service,
 	't|time=s'     => \$time,
+	'v|verbose+'   => \$verbosity,
 	'V|version'    => \&show_version,
 	'devmode'      => \$developer_mode,
 	'json'         => \$json_output,
@@ -233,6 +244,18 @@ sub format_delay {
 	return q{};
 }
 
+sub show_message {
+	my ($msg) = @_;
+	if ( $verbosity >= ( $min_verbosity{ $msg->type } // 0 ) ) {
+		if ( $msg->short ) {
+			printf( "| %s\n", $msg->short );
+		}
+		printf( "| %s\n", $msg->text );
+		return 1;
+	}
+	return;
+}
+
 if ( my $err = $hafas->errstr ) {
 	say STDERR "Request error: ${err}";
 	if ( $hafas->errcode
@@ -277,10 +300,7 @@ for my $res ( @{ $hafas->{results} } ) {
 		display_occupancies( $res->load ), $glance
 	);
 	for my $msg ( $res->messages ) {
-		if ( $msg->short ) {
-			printf( "# %s\n", $msg->short );
-		}
-		printf( "# %s\n", $msg->text );
+		show_message($msg);
 	}
 	say q{};
 
@@ -322,10 +342,7 @@ for my $res ( @{ $hafas->{results} } ) {
 			{
 				next;
 			}
-			if ( $msg->short ) {
-				printf( "# %s\n", $msg->short );
-			}
-			printf( "# %s\n", $msg->text );
+			show_message($msg);
 		}
 		say q{};
 	}
