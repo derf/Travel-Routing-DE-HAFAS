@@ -14,6 +14,7 @@ our $VERSION = '0.00';
 
 Travel::Routing::DE::HAFAS::Connection::Section->mk_ro_accessors(
 	qw(type schep_dep rt_dep sched_arr rt_arr dep_datetime arr_datetime arr_delay dep_delay journey distance duration transfer_duration dep_loc arr_loc
+	  dep_platform arr_platform
 	  operator id name category category_long class number line line_no load delay direction)
 );
 
@@ -81,6 +82,8 @@ sub new {
 		arr_datetime => $rt_arr // $sched_arr,
 		dep_loc      => $locs->[ $sec->{dep}{locX} ],
 		arr_loc      => $locs->[ $sec->{arr}{locX} ],
+		dep_platform => $sec->{dep}{dplatfR} // $sec->{dep}{dPlatfS},
+		arr_platform => $sec->{arr}{aplatfR} // $sec->{arr}{aPlatfS},
 		messages     => \@messages,
 	};
 
