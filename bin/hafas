@@ -337,7 +337,8 @@ for my $res ( @{ $hafas->{results} } ) {
 			);
 		}
 		elsif ( $sec->type eq 'WALK' ) {
-			printf( "# Walk %dm  (approx. %d minutes)\n",
+			printf(
+				"${output_bold}Walk %dm${output_reset}  (approx. %d minutes)\n",
 				$sec->distance, $sec->duration->in_units('minutes') );
 		}
 		else {
