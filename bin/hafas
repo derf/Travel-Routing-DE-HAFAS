@@ -39,6 +39,9 @@ for my $arg (@ARGV) {
 	$arg = decode( 'UTF-8', $arg );
 }
 
+my $output_bold  = -t STDOUT ? "\033[1m" : q{};
+my $output_reset = -t STDOUT ? "\033[0m" : q{};
+
 GetOptions(
 	'd|date=s'     => \$date,
 	'h|help'       => sub { show_help(0) },
@@ -314,7 +317,8 @@ for my $res ( @{ $hafas->{results} } ) {
 
 	for my $sec ( $res->sections ) {
 		if ( $sec->type eq 'JNY' ) {
-			printf( "\033[1m%s\033[0m → %s\n", $sec->name, $sec->direction );
+			printf( "${output_bold}%s${output_reset} → %s\n",
+				$sec->name, $sec->direction );
 			printf(
 				"%-5s %-${have_delay}s ab  %s\n",
 				$sec->dep_datetime->strftime('%H:%M'),
