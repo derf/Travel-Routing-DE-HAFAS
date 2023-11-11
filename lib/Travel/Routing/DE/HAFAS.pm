@@ -608,4 +608,34 @@ sub connections {
 	return @{ $self->{results} };
 }
 
+# static
+sub get_services {
+	my @services;
+	for my $service ( sort keys %hafas_instance ) {
+		my %desc = %{ $hafas_instance{$service} };
+		$desc{shortname} = $service;
+		push( @services, \%desc );
+	}
+	return @services;
+}
+
+# static
+sub get_service {
+	my ($service) = @_;
+
+	if ( defined $service and exists $hafas_instance{$service} ) {
+		return $hafas_instance{$service};
+	}
+	return;
+}
+
+sub get_active_service {
+	my ($self) = @_;
+
+	if ( defined $self->{active_service} ) {
+		return $hafas_instance{ $self->{active_service} };
+	}
+	return;
+}
+
 # }}}
