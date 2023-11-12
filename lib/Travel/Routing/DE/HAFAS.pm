@@ -636,7 +636,7 @@ Travel::Routing::DE::HAFAS - Interface to HAFAS itinerary services
 
 	my $hafas = Travel::Routing::DE::HAFAS->new(
 		from_stop => 'Eichlinghofen H-Bahn, Dortmund',
-		to_stop => 'Gangelplatz, DE<uuml>sseldorf',
+		to_stop => 'Essen-Kupferdreh',
 	);
 
 	if (my $err = $hafas->errstr) {
