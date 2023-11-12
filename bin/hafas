@@ -270,7 +270,7 @@ if ( my $err = $hafas->errstr ) {
 }
 
 if ($json_output) {
-	say JSON->new->convert_blessed->encode( [ $hafas->results ] );
+	say JSON->new->convert_blessed->encode( [ $hafas->connections ] );
 	exit 0;
 }
 
@@ -397,12 +397,6 @@ tbd
 =item B<-d>, B<--date> I<dd>.I<mm>.[I<yyyy>]
 
 Planned departure (or arrival) date.  Default: today.
-
-=item B<--json>
-
-Print result(s) as JSON. This is a dump of internal data structures and not
-guaranteed to remain stable between minor versions. Please use the
-Travel::Routing::DE::HAFAS(3pm) module if you need a proper API.
 
 =item B<-l>, B<--language> I<language>
 
