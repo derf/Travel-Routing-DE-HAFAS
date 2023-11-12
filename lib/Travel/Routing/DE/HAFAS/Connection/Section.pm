@@ -162,3 +162,192 @@ sub messages {
 # }}}
 
 1;
+
+__END__
+
+=head1 NAME
+
+Travel::Routing::DE::HAFAS::Connection::Section - A single trip between two stops
+
+=head1 SYNOPSIS
+
+	# $connection is a Travel::Routing::DE::HAFAS::Connection object
+	for my $sec ( $connection->sections ) {
+		printf("%s -> %s\n%s ab %s\n%s an %s\n\n",
+			$sec->name, $sec->direction,
+			$sec->dep_datetime->strftime('%H:%M'),
+			$sec->dep_loc->name,
+			$sec->arr_datetime->strftime('%H:%M'),
+			$sec->arr_loc->name,
+		);
+	}
+
+=head1 VERSION
+
+version 0.01
+
+=head1 DESCRIPTION
+
+Travel::Routing::DE::HAFAS::Connection::Section describes a single section
+between two stops, which is typically a public transit trip or a walk.  It is
+part of a series of sections held by
+Travel::Routing::DE::HAFAS::Connection(3pm).
+
+=head1 METHODS
+
+Some accessors depend on the section type. Those are annotated with the types
+in which they are valid and return undef when called in other contexts.
+
+=head2 ACCESSORS
+
+=over
+
+=item $section->arr_cancelled
+
+True if the arrival at the end of this section has been cancelled.
+False otherwise.
+
+=item $section->arr_datetime
+
+DateTime(3pm) object holding the arrival time and date. Based on real-time data
+if available, falls back to schedule data otherwise.
+
+=item $section->arr_delay
+
+Arrival delay in minutes. Undef if unknown.
+
+=item $section->arr_loc
+
+Travel::Routing::DE::HAFAS::Location(3pm) object describing the arrival stop.
+
+=item $section->arr_platform
+
+Arrival platform as string, not necessarily numeric. Undef if unknown.
+
+=item $section->dep_cancelled
+
+True if the departure at the start of this section has been cancelled.
+False otherwise.
+
+=item $section->dep_datetime
+
+DateTime(3pm) object holding the departure time and date. Based on real-time
+data if available, falls back to schedule data otherwise.
+
+=item $section->dep_delay
+
+Departure dlay in minutes. Undef if unknown.
+
+=item $section->dep_loc
+
+Travel::Routing::DE::HAFAS::Location(3pm) object describing the departure stop.
+
+=item $section->dep_platform
+
+Deprarture platform as string, not necessarily numeric. Undef if unknown.
+
+=item $section->direction (JNY)
+
+Travel direction of this trip; this is typically the text printed on the
+transport vehicle itself. May differ from its terminus.
+
+=item $section->distance (WALK)
+
+Walking distance in meters. Does not take vertical elevation changes into
+account.
+
+=item $section->duration (WALK)
+
+DateTime::Duration(3pm) oobject holding the walking duration.
+Typically assumes a slow pace.
+
+=item $section->id (JNY)
+
+HAFAS-internal journey ID.
+
+=item $section->line (JNY)
+
+Trip or line name in a format like "Bus SB16" (Bus line SB16), "RE 42"
+(RegionalExpress train 42) or "IC 2901" (InterCity train 2901, no line
+information). Note that this accessor does not return line information for
+IC/ICE/EC services, even if it is available. Use B<line_no> for those.
+
+=item $section->line_no (JNY)
+
+Line identifier; undef if unknown.
+The line identifier may be a single number such as "11" (underground train line
+U 11), a single word such as "AIR" or a combination (e.g. "SB16").  May also
+provide line numbers of IC/ICE services.
+
+=item $section->messages
+
+List of Travel::Status::DE::HAFAS::Message(3pm) objects associated with this
+connection section. Typically contains messages related to the mode of
+transport, such as construction sites, Wi-Fi availability, and the like.
+
+=item $section->name (JNY)
+
+Trip or line name in a format like "Bus SB16" (Bus line SB16) or "RE 10111"
+(RegionalExpress train 10111, no line information).
+
+=item $section->number (JNY)
+
+Trip number (e.g. train number); undef if unknown.
+
+=item $section->rt_arr
+
+DateTime(3pm) object holding real-time arrival if available.
+Undef otherwise.
+
+=item $section->rt_dep
+
+DateTime(3pm) object holding real-time departure if available.
+Undef otherwise.
+
+=item $section->sched_arr
+
+DateTime(3pm) object holding scheduled arrival if available.
+Undef otherwise.
+
+=item $section->schep_dep
+
+DateTime(3pm) object holding scheduled departure if available.
+Undef otherwise.
+
+=item $section->transfer_duration (JNY)
+
+DateTime::Duration(3pm) object holding the difference between the departure of
+this journey and the arrival of the previous journey in the connection -- i.e.,
+the amount of time available for changing platforms. Undef for the first
+journey in a connuction.
+
+=item $section->type
+
+Type of this section as exposeed by the HAFAS backend.
+Known types: B<JNY> (a public transit journey) and B<WALK> (walking).
+
+=back
+
+=head1 DIAGNOSTICS
+
+None.
+
+=head1 DEPENDENCIES
+
+DateTime::Duration(3pm), Travel::Routing::DE::HAFAS::Utils(3pm).
+
+=head1 BUGS AND LIMITATIONS
+
+None known.
+
+=head1 SEE ALSO
+
+Travel::Routing::DE::HAFAS(3pm), Travel::Routing::DE::HAFAS::Connection(3pm).
+
+=head1 AUTHOR
+
+Copyright (C) 2023 by Birte Kristina Friesel E<lt>derf@finalrewind.orgE<gt>
+
+=head1 LICENSE
+
+This program is licensed under the same terms as Perl itself.
