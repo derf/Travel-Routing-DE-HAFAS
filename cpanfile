@@ -12,9 +12,8 @@ requires 'LWP::Protocol::https';
 requires 'Travel::Status::DE::HAFAS';
 requires 'Travel::Status::DE::HAFAS::Message', '4.19';
 
-#on test => sub {
-#	requires 'File::Slurp';
-#	requires 'Test::Compile';
-#	requires 'Test::More';
-#	requires 'Test::Pod';
-#};
+on test => sub {
+	requires 'Test::Compile';
+	requires 'Test::More';
+	requires 'Test::Pod';
+};
