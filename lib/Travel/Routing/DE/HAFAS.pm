@@ -216,57 +216,53 @@ sub new {
 
 	my $req;
 
-	if (0) {
+	my $date = ( $conf{datetime} // $now )->strftime('%Y%m%d');
+	my $time = ( $conf{datetime} // $now )->strftime('%H%M%S');
+
+	my ( $from_lid, $to_lid );
+	if ( $self->{from_stop} =~ m{ ^ [0-9]+ $ }x ) {
+		$from_lid = 'A=1@L=' . $self->{from_stop} . '@';
 	}
 	else {
-		my $date = ( $conf{datetime} // $now )->strftime('%Y%m%d');
-		my $time = ( $conf{datetime} // $now )->strftime('%H%M%S');
-
-		my ( $from_lid, $to_lid );
-		if ( $self->{from_stop} =~ m{ ^ [0-9]+ $ }x ) {
-			$from_lid = 'A=1@L=' . $self->{from_stop} . '@';
-		}
-		else {
-			$from_lid = 'A=1@O=' . $self->{from_stop} . '@';
-		}
-		if ( $self->{to_stop} =~ m{ ^ [0-9]+ $ }x ) {
-			$to_lid = 'A=1@L=' . $self->{to_stop} . '@';
-		}
-		else {
-			$to_lid = 'A=1@O=' . $self->{to_stop} . '@';
-		}
-
-		$req = {
-			svcReqL => [
-				{
-					meth => 'TripSearch',
-					req  => {
-						depLocL    => [ { lid => $from_lid } ],
-						arrLocL    => [ { lid => $to_lid } ],
-						numF       => 6,
-						maxChg     => undef,
-						minChgTime => undef,
-						outFrwd    => undef,
-						viaLocL    => undef,
-						trfReq     => {
-							cType    => 'PK',
-							tvlrProf => [ { type => 'E' } ],
-						},
-						outDate  => $date,
-						outTime  => $time,
-						jnyFltrL => [
-							{
-								type  => "PROD",
-								mode  => "INC",
-								value => $self->mot_mask
-							}
-						]
-					},
-				},
-			],
-			%{ $hafas_instance{$service}{request} }
-		};
+		$from_lid = 'A=1@O=' . $self->{from_stop} . '@';
 	}
+	if ( $self->{to_stop} =~ m{ ^ [0-9]+ $ }x ) {
+		$to_lid = 'A=1@L=' . $self->{to_stop} . '@';
+	}
+	else {
+		$to_lid = 'A=1@O=' . $self->{to_stop} . '@';
+	}
+
+	$req = {
+		svcReqL => [
+			{
+				meth => 'TripSearch',
+				req  => {
+					depLocL    => [ { lid => $from_lid } ],
+					arrLocL    => [ { lid => $to_lid } ],
+					numF       => 6,
+					maxChg     => undef,
+					minChgTime => undef,
+					outFrwd    => undef,
+					viaLocL    => undef,
+					trfReq     => {
+						cType    => 'PK',
+						tvlrProf => [ { type => 'E' } ],
+					},
+					outDate  => $date,
+					outTime  => $time,
+					jnyFltrL => [
+						{
+							type  => "PROD",
+							mode  => "INC",
+							value => $self->mot_mask
+						}
+					]
+				},
+			},
+		],
+		%{ $hafas_instance{$service}{request} }
+	};
 
 	if ( $conf{language} ) {
 		$req->{lang} = $conf{language};
@@ -338,14 +334,9 @@ sub new_p {
 	my ( $obj, %conf ) = @_;
 	my $promise = $conf{promise}->new;
 
-	if (
-		not(   $conf{station}
-			or $conf{journey}
-			or $conf{geoSearch}
-			or $conf{locationSearch} )
-	  )
-	{
-		return $promise->reject('station or journey flag must be passed');
+	if ( not( $conf{from_stop} and $conf{to_stop} ) ) {
+		confess('from_stop and to_stop must be specified');
+		return $promise->reject('from_stop and to_stop must be specified');
 	}
 
 	my $self = $obj->new( %conf, async => 1 );
@@ -356,15 +347,7 @@ sub new_p {
 			my ($content) = @_;
 			$self->{raw_json} = $self->{json}->decode($content);
 			$self->check_mgate;
-			if ( $conf{journey} ) {
-				$self->parse_journey;
-			}
-			elsif ( $conf{geoSearch} or $conf{locationSearch} ) {
-				$self->parse_search;
-			}
-			else {
-				$self->parse_board;
-			}
+			$self->parse_trips;
 			if ( $self->errstr ) {
 				$promise->reject( $self->errstr, $self );
 			}
@@ -448,7 +431,6 @@ sub post_with_cache {
 	my $content = $reply->content;
 
 	if ($cache) {
-		say "freeeez";
 		$cache->freeze( $self->{post}, \$content );
 	}
 
