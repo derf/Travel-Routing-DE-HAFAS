@@ -375,7 +375,7 @@ __END__
 
 =head1 NAME
 
-hafas - Interface to the HAFAS (e.g. Deutsche Bahn) trip search
+hafas - Interface to HAFAS (e.g. Deutsche Bahn) itinerary services
 
 =head1 SYNOPSIS
 
@@ -388,7 +388,9 @@ version 0.00
 
 =head1 DESCRIPTION
 
-tbd
+B<hafas> is a command line client for HAFAS-based public transit itinerary
+services, e.g. the one operated by Deutsche Bahn. It requests connections
+between two stops and prints the results.
 
 =head1 OPTIONS
 
