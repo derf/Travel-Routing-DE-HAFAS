@@ -162,3 +162,152 @@ sub sections {
 # }}}
 
 1;
+
+__END__
+
+=head1 NAME
+
+Travel::Routing::DE::HAFAS::Connection - A single connection between two stops
+
+=head1 SYNOPSIS
+
+	for my $connection ( $hafas->connections ) {
+		# $connection is a Travel::Routing::DE::HAFAS::Connection object
+		for my $section ( $connection->sections ) {
+			# $section is a Travel::Routing::DE::HAFAS::Connection::Section object
+		}
+	}
+
+=head1 VERSION
+
+version 0.01
+
+=head1 DESCRIPTION
+
+Travel::Routing::DE::HAFAS::Connection describes a single connection (or
+itinerary) for getting from one stop to another. In addition to overall
+connection information, it holds a list of
+Travel::Routing::DE::HAFAS::Connection::Section(3pm) objects that describe the
+individual parts of the connection.
+
+=head1 METHODS
+
+=head2 ACCESSORS
+
+=over
+
+=item $connection->arr_cancelled
+
+True if the arrival of the last section in this connection has been cancelled,
+false otherwise.
+
+=item $connection->arr_datetime
+
+DateTime(3pm) object holding the arrival time and date. Based on real-time data
+if available, falls back to schedule data otherwise.
+
+=item $connection->arr_loc
+
+Travel::Routing::DE::HAFAS::Location(3pm) object describing the arrival stop.
+
+=item $connection->arr_platform
+
+Arrival platform. Undef if unknown.
+
+=item $connection->changes
+
+Number of changes between different modes of transport.
+
+=item $connection->dep_cancelled
+
+True if the departure of the first section in this connection has been
+cancelled, false otherwise.
+
+=item $connection->dep_datetime
+
+DateTime(3pm) object holding the departure time and date. Based on real-time
+data if available, falls back to schedule data otherwise.
+
+=item $connection->dep_loc
+
+Travel::Routing::DE::HAFAS::Location(3pm) object describing the departure stop.
+
+=item $connection->dep_platform
+
+Departure platform. Undef if unknown.
+
+=item $connection->duration
+
+DateTime::Duration(3pm) object describing the duration of this connection,
+i.e., the time between departure and arrival.
+
+=item $connection->is_cancelled
+
+True if part of this connection has been cancelled.  Depending on the
+availability of replacement service, this may or may not indicate that the
+connection is no longer possible.
+
+=item $connection->load
+
+Maximum expected occupancy along the connection.
+Returns a hashref with keys FIRST and SECOND; each value ranges from 1
+(low occupancy) to 4 (fully booked).
+Returns undef if occupancy data is not available.
+
+=item $connection->messages
+
+List of Travel::Status::DE::HAFAS::Message(3pm) objects associated with this
+connection. Typically contains messages along the lines of "current information
+available", "journey cancelled", or "a change between two connection sections
+may not be feasible".
+
+=item $connection->rt_arr
+
+DateTime(3pm) object holding real-time arrival if available.
+Undef otherwise.
+
+=item $connection->rt_dep
+
+DateTime(3pm) object holding real-time departure if available.
+Undef otherwise.
+
+=item $connection->sched_arr
+
+DateTime(3pm) object holding scheduled arrival if available.
+Undef otherwise.
+
+=item $connection->sched_dep
+
+DateTime(3pm) object holding scheduled departure if available.
+Undef otherwise.
+
+=item $connection->sections
+
+List of Travel::Routing::DE::HAFAS::Connection::Section(3pm) objects that
+describe the individual sections of this connection.
+
+=back
+
+=head1 DIAGNOSTICS
+
+None.
+
+=head1 DEPENDENCIES
+
+None.
+
+=head1 BUGS AND LIMITATIONS
+
+None known.
+
+=head1 SEE ALSO
+
+Travel::Routing::DE::HAFAS(3pm), Travel::Routing::DE::HAFAS::Connection::Section(3pm).
+
+=head1 AUTHOR
+
+Copyright (C) 2023 by Birte Kristina Friesel E<lt>derf@finalrewind.orgE<gt>
+
+=head1 LICENSE
+
+This program is licensed under the same terms as Perl itself.
