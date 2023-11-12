@@ -30,6 +30,14 @@ sub new {
 	return $ref;
 }
 
+sub TO_JSON {
+	my ($self) = @_;
+
+	my $ret = { %{$self} };
+
+	return $ret;
+}
+
 1;
 
 __END__
