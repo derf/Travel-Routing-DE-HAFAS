@@ -636,7 +636,7 @@ Travel::Routing::DE::HAFAS - Interface to HAFAS itinerary services
 
 	my $hafas = Travel::Routing::DE::HAFAS->new(
 		from_stop => 'Eichlinghofen H-Bahn, Dortmund',
-		to_stop => 'Gangelplatz, Düsseldorf',
+		to_stop => 'Gangelplatz, DE<uuml>sseldorf',
 	);
 
 	if (my $err = $hafas->errstr) {
@@ -646,7 +646,7 @@ Travel::Routing::DE::HAFAS - Interface to HAFAS itinerary services
 	for my $con ( $hafas->connections ) {
 		for my $sec ($con->sections) {
 			if ( $sec->type eq 'JNY' ) {
-				printf("%s → %s\n%s ab %s\n%s an %s\n\n",
+				printf("%s -> %s\n%s ab %s\n%s an %s\n\n",
 					$sec->name, $sec->direction,
 					$sec->dep_datetime->strftime('%H:%M'),
 					$sec->dep_loc->name,
