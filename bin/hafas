@@ -367,7 +367,7 @@ hafas - Interface to the HAFAS (e.g. Deutsche Bahn) trip search
 =head1 SYNOPSIS
 
 B<hafas> [B<-d> I<date>] [B<-t> I<time>] [B<-m> I<motlist>]
-[B<-s> I<service>] [B<-l> I<language>] I<from> I<to>
+[B<-s> I<service>] [B<-l> I<language>] [B<-v>] I<from> I<to>
 
 =head1 VERSION
 
@@ -422,6 +422,13 @@ See B<--list> for a list of known services.
 =item B<-t>, B<--time> I<hh>:I<mm>
 
 Planned departure (or arrival) time.  Default: now.
+
+=item B<-v>, B<--verbose>
+
+Show more HAFAS messages, e.g. related to construction sites or Wi-Fi
+availability. Repeating B<-v> increases the verbosity.  The level, and thus
+number of different message types that B<hafas> displays, ranges from 0 (no
+B<-v>) to 3 (B<-vvv>).
 
 =item B<-V>, B<--version>
 
