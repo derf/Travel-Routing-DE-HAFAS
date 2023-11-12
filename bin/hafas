@@ -274,11 +274,14 @@ if ($json_output) {
 	exit 0;
 }
 
-for my $res ( @{ $hafas->{results} } ) {
+for my $res ( $hafas->connections ) {
 
-	#if ($res->is_cancelled) {
-	#	say "# cancelled\n";
-	#}
+	my $cancelled;
+	for my $msg ( $res->messages ) {
+		if ( $msg->type eq 'C' and $msg->text =~ m{Fahrt fällt aus} ) {
+			$cancelled = 1;
+		}
+	}
 
 	my $glance = q{};
 	for my $sec ( $res->sections ) {
@@ -297,11 +300,17 @@ for my $res ( @{ $hafas->{results} } ) {
 		}
 	}
 
-	printf(
-		"%02d:%02d  %s  %s\n",
-		$res->duration->in_units( 'hours', 'minutes' ),
-		display_occupancies( $res->load ), $glance
-	);
+	if ($cancelled) {
+		printf( "--:--  %s  %s\n", display_occupancies( $res->load ), $glance );
+	}
+	else {
+		printf(
+			"%02d:%02d  %s  %s\n",
+			$res->duration->in_units( 'hours', 'minutes' ),
+			display_occupancies( $res->load ), $glance
+		);
+	}
+
 	for my $msg ( $res->messages ) {
 		show_message($msg);
 	}
