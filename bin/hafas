@@ -457,9 +457,15 @@ None.
 
 =over
 
-=item * Class::Accessor(3pm)
+=item * DateTime(3pm)
 
-=item * LWP::UserAgent(3pm)
+=item * Encode(3pm)
+
+=item * JSON(3pm)
+
+=item * List::MoreUtils(3pm)
+
+=item * Travel::Routing::DE::HAFAS(3pm)
 
 =item * Travel::Status::DE::HAFAS(3pm)
 
