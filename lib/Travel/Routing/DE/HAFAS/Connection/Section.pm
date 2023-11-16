@@ -13,7 +13,7 @@ use Travel::Routing::DE::HAFAS::Utils;
 our $VERSION = '0.00';
 
 Travel::Routing::DE::HAFAS::Connection::Section->mk_ro_accessors(
-	qw(type schep_dep rt_dep sched_arr rt_arr dep_datetime arr_datetime arr_delay dep_delay journey distance duration transfer_duration dep_loc arr_loc
+	qw(type schep_dep rt_dep sched_arr rt_arr dep arr arr_delay dep_delay journey distance duration transfer_duration dep_loc arr_loc
 	  dep_platform arr_platform dep_cancelled arr_cancelled
 	  operator id name category category_long class number line line_no load delay direction)
 );
@@ -72,14 +72,17 @@ sub new {
 		}
 	}
 
+	# TODO load
+	# TODO operator
+
 	my $ref = {
 		type          => $sec->{type},
 		sched_dep     => $sched_dep,
 		rt_dep        => $rt_dep,
 		sched_arr     => $sched_arr,
 		rt_arr        => $rt_arr,
-		dep_datetime  => $rt_dep // $sched_dep,
-		arr_datetime  => $rt_arr // $sched_arr,
+		dep           => $rt_dep // $sched_dep,
+		arr           => $rt_arr // $sched_arr,
 		dep_loc       => $locs->[ $sec->{dep}{locX} ],
 		arr_loc       => $locs->[ $sec->{arr}{locX} ],
 		dep_platform  => $sec->{dep}{dplatfR} // $sec->{dep}{dPlatfS},
@@ -99,7 +102,6 @@ sub new {
 
 	if ( $sec->{type} eq 'JNY' ) {
 
-		#operator id name type type_long class number line line_no load delay direction)
 		my $journey = $sec->{jny};
 		my $product = $prodL[ $journey->{prodX} ];
 		$ref->{id}            = $journey->{jid};
@@ -118,6 +120,12 @@ sub new {
 			and $product->{nameS} )
 		{
 			$ref->{name} .= ' ' . $product->{nameS};
+		}
+
+		my @stops;
+		for my $stop ( @{ $journey->{stopL} // [] } ) {
+			my $loc = $locs->[ $stop->{locX} ];
+			say $loc->name;
 		}
 	}
 	elsif ( $sec->{type} eq 'WALK' ) {
@@ -142,7 +150,7 @@ sub new {
 sub set_transfer_from_previous_section {
 	my ( $self, $prev_sec ) = @_;
 
-	my $delta = $self->dep_datetime - $prev_sec->arr_datetime;
+	my $delta = $self->dep - $prev_sec->arr;
 	$self->{transfer_duration} = $delta;
 }
 
@@ -175,9 +183,9 @@ Travel::Routing::DE::HAFAS::Connection::Section - A single trip between two stop
 	for my $sec ( $connection->sections ) {
 		printf("%s -> %s\n%s ab %s\n%s an %s\n\n",
 			$sec->name, $sec->direction,
-			$sec->dep_datetime->strftime('%H:%M'),
+			$sec->dep->strftime('%H:%M'),
 			$sec->dep_loc->name,
-			$sec->arr_datetime->strftime('%H:%M'),
+			$sec->arr->strftime('%H:%M'),
 			$sec->arr_loc->name,
 		);
 	}
@@ -207,7 +215,7 @@ in which they are valid and return undef when called in other contexts.
 True if the arrival at the end of this section has been cancelled.
 False otherwise.
 
-=item $section->arr_datetime
+=item $section->arr
 
 DateTime(3pm) object holding the arrival time and date. Based on real-time data
 if available, falls back to schedule data otherwise.
@@ -229,7 +237,7 @@ Arrival platform as string, not necessarily numeric. Undef if unknown.
 True if the departure at the start of this section has been cancelled.
 False otherwise.
 
-=item $section->dep_datetime
+=item $section->dep
 
 DateTime(3pm) object holding the departure time and date. Based on real-time
 data if available, falls back to schedule data otherwise.

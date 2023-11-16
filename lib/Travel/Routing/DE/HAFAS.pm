@@ -648,9 +648,9 @@ Travel::Routing::DE::HAFAS - Interface to HAFAS itinerary services
 			if ( $sec->type eq 'JNY' ) {
 				printf("%s -> %s\n%s ab %s\n%s an %s\n\n",
 					$sec->name, $sec->direction,
-					$sec->dep_datetime->strftime('%H:%M'),
+					$sec->dep->strftime('%H:%M'),
 					$sec->dep_loc->name,
-					$sec->arr_datetime->strftime('%H:%M'),
+					$sec->arr->strftime('%H:%M'),
 					$sec->arr_loc->name,
 				);
 			}

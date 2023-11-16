@@ -14,7 +14,7 @@ use Travel::Routing::DE::HAFAS::Connection::Section;
 our $VERSION = '0.00';
 
 Travel::Routing::DE::HAFAS::Connection->mk_ro_accessors(
-	qw(changes duration sched_dep rt_dep sched_arr rt_arr dep_datetime arr_datetime dep_platform arr_platform dep_loc arr_loc dep_cancelled arr_cancelled is_cancelled load)
+	qw(changes duration sched_dep rt_dep sched_arr rt_arr dep arr dep_platform arr_platform dep_loc arr_loc dep_cancelled arr_cancelled is_cancelled load)
 );
 
 # {{{ Constructor
@@ -119,8 +119,8 @@ sub new {
 		dep_cancelled => $dep_cancelled,
 		arr_cancelled => $arr_cancelled,
 		is_cancelled  => $is_cancelled,
-		dep_datetime  => $rt_dep // $sched_dep,
-		arr_datetime  => $rt_arr // $sched_arr,
+		dep           => $rt_dep // $sched_dep,
+		arr           => $rt_arr // $sched_arr,
 		dep_platform  => $connection->{dep}{dPlatfR}
 		  // $connection->{dep}{dPlatfS},
 		arr_platform => $connection->{arr}{aPlatfR}
@@ -201,7 +201,7 @@ individual parts of the connection.
 True if the arrival of the last section in this connection has been cancelled,
 false otherwise.
 
-=item $connection->arr_datetime
+=item $connection->arr
 
 DateTime(3pm) object holding the arrival time and date. Based on real-time data
 if available, falls back to schedule data otherwise.
@@ -223,7 +223,7 @@ Number of changes between different modes of transport.
 True if the departure of the first section in this connection has been
 cancelled, false otherwise.
 
-=item $connection->dep_datetime
+=item $connection->dep
 
 DateTime(3pm) object holding the departure time and date. Based on real-time
 data if available, falls back to schedule data otherwise.

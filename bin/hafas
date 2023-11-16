@@ -332,7 +332,7 @@ for my $res ( $hafas->connections ) {
 				"%-5s %-${have_delay}s ab  %s%s%s\n",
 				$sec->dep_cancelled
 				? '--:--'
-				: $sec->dep_datetime->strftime('%H:%M'),
+				: $sec->dep->strftime('%H:%M'),
 				format_delay( $sec->dep_delay ),
 				$sec->dep_loc->name,
 				$sec->dep_platform ? q{: } : q{},
@@ -342,7 +342,7 @@ for my $res ( $hafas->connections ) {
 				"%-5s %-${have_delay}s an  %s%s%s\n",
 				$sec->arr_cancelled
 				? '--:--'
-				: $sec->arr_datetime->strftime('%H:%M'),
+				: $sec->arr->strftime('%H:%M'),
 				format_delay( $sec->arr_delay ),
 				$sec->arr_loc->name,
 				$sec->arr_platform ? q{: } : q{},
