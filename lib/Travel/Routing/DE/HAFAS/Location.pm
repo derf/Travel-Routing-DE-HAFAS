@@ -6,7 +6,7 @@ use 5.014;
 
 use parent 'Class::Accessor';
 
-our $VERSION = '0.00';
+our $VERSION = '0.01';
 
 Travel::Routing::DE::HAFAS::Location->mk_ro_accessors(
 	qw(lid type name eva state coordinate));

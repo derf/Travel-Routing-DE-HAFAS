@@ -11,7 +11,7 @@ use DateTime::Duration;
 use Travel::Routing::DE::HAFAS::Utils;
 use Travel::Routing::DE::HAFAS::Connection::Section;
 
-our $VERSION = '0.00';
+our $VERSION = '0.01';
 
 Travel::Routing::DE::HAFAS::Connection->mk_ro_accessors(
 	qw(changes duration sched_dep rt_dep sched_arr rt_arr dep arr dep_platform arr_platform dep_loc arr_loc dep_cancelled arr_cancelled is_cancelled load)

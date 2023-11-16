@@ -18,7 +18,7 @@ use Travel::Routing::DE::HAFAS::Connection;
 use Travel::Routing::DE::HAFAS::Location;
 use Travel::Status::DE::HAFAS::Message;
 
-our $VERSION = '0.00';
+our $VERSION = '0.01';
 
 # {{{ Endpoint Definition
 

@@ -10,7 +10,7 @@ use parent 'Class::Accessor';
 use DateTime::Duration;
 use Travel::Routing::DE::HAFAS::Utils;
 
-our $VERSION = '0.00';
+our $VERSION = '0.01';
 
 Travel::Routing::DE::HAFAS::Connection::Section->mk_ro_accessors(
 	qw(type schep_dep rt_dep sched_arr rt_arr dep arr arr_delay dep_delay journey distance duration transfer_duration dep_loc arr_loc
@@ -125,7 +125,6 @@ sub new {
 		my @stops;
 		for my $stop ( @{ $journey->{stopL} // [] } ) {
 			my $loc = $locs->[ $stop->{locX} ];
-			say $loc->name;
 		}
 	}
 	elsif ( $sec->{type} eq 'WALK' ) {
