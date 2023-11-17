@@ -325,8 +325,8 @@ Undef otherwise.
 
 DateTime::Duration(3pm) object holding the difference between the departure of
 this journey and the arrival of the previous journey in the connection -- i.e.,
-the amount of time available for changing platforms. Undef for the first
-journey in a connuction.
+the amount of time available for changing platforms. May be negative.
+Undef for the first journey in a connection.
 
 =item $section->type
 
