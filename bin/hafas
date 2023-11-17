@@ -240,9 +240,9 @@ sub display_occupancies {
 }
 
 sub format_delay {
-	my ($delay) = @_;
-	if ($delay) {
-		return sprintf( '(%+4d)', $delay );
+	my ( $delay, $len ) = @_;
+	if ( $delay and $len ) {
+		return sprintf( "(%+${len}d)", $delay );
 	}
 	return q{};
 }
@@ -316,12 +316,18 @@ for my $res ( $hafas->connections ) {
 	}
 	say q{};
 
-	my $have_delay = 0;
-
+	my $delay_len = 0;
+	my $delay_fmt = 0;
 	for my $sec ( $res->sections ) {
-		if ( $sec->dep_delay or $sec->arr_delay ) {
-			$have_delay = 7;
+		if ( $sec->dep_delay ) {
+			$delay_len = max( $delay_len, length( $sec->dep_delay ) + 1 );
 		}
+		if ( $sec->arr_delay ) {
+			$delay_len = max( $delay_len, length( $sec->arr_delay ) + 1 );
+		}
+	}
+	if ($delay_len) {
+		$delay_fmt = $delay_len + 2;
 	}
 
 	for my $sec ( $res->sections ) {
@@ -329,21 +335,21 @@ for my $res ( $hafas->connections ) {
 			printf( "${output_bold}%s${output_reset} → %s\n",
 				$sec->name, $sec->direction );
 			printf(
-				"%-5s %-${have_delay}s ab  %s%s%s\n",
+				"%-5s %-${delay_fmt}s ab  %s%s%s\n",
 				$sec->dep_cancelled
 				? '--:--'
 				: $sec->dep->strftime('%H:%M'),
-				format_delay( $sec->dep_delay ),
+				format_delay( $sec->dep_delay, $delay_len ),
 				$sec->dep_loc->name,
 				$sec->dep_platform ? q{: } : q{},
 				$sec->dep_platform // q{},
 			);
 			printf(
-				"%-5s %-${have_delay}s an  %s%s%s\n",
+				"%-5s %-${delay_fmt}s an  %s%s%s\n",
 				$sec->arr_cancelled
 				? '--:--'
 				: $sec->arr->strftime('%H:%M'),
-				format_delay( $sec->arr_delay ),
+				format_delay( $sec->arr_delay, $delay_len ),
 				$sec->arr_loc->name,
 				$sec->arr_platform ? q{: } : q{},
 				$sec->arr_platform // q{},
