@@ -231,12 +231,12 @@ sub display_occupancies {
 	my ($load) = @_;
 
 	if ( $load and ( $load->{FIRST} or $load->{SECOND} ) ) {
-		return sprintf( "[%1s%1s]",
+		return sprintf( "%1s%1s",
 			display_occupancy( $load->{FIRST} ),
 			display_occupancy( $load->{SECOND} ) );
 	}
 
-	return q{    };
+	return q{  };
 }
 
 sub format_delay {
