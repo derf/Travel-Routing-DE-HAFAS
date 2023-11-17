@@ -72,7 +72,12 @@ sub new {
 		}
 	}
 
-	# TODO load
+	my $tco = {};
+	for my $tco_id ( @{ $sec->{jny}{dTrnCmpSX}{tcocX} // [] } ) {
+		my $tco_kv = $opt{common}{tcocL}[$tco_id];
+		$tco->{ $tco_kv->{c} } = $tco_kv->{r};
+	}
+
 	# TODO operator
 
 	my $ref = {
@@ -89,6 +94,7 @@ sub new {
 		arr_platform  => $sec->{arr}{aplatfR} // $sec->{arr}{aPlatfS},
 		dep_cancelled => $sec->{dep}{dCncl},
 		arr_cancelled => $sec->{arr}{aCncl},
+		load          => $tco,
 		messages      => \@messages,
 	};
 
@@ -285,6 +291,13 @@ Line identifier; undef if unknown.
 The line identifier may be a single number such as "11" (underground train line
 U 11), a single word such as "AIR" or a combination (e.g. "SB16").  May also
 provide line numbers of IC/ICE services.
+
+=item $sec->load
+
+Maximum expected occupancy along this section.
+Returns a hashref with keys FIRST and SECOND; each value ranges from 1
+(low occupancy) to 4 (fully booked).
+Returns undef if occupancy data is not available.
 
 =item $section->messages
 
