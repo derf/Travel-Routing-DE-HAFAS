@@ -293,7 +293,7 @@ for my $res ( $hafas->connections ) {
 		if ( defined $sec->transfer_duration ) {
 			if ( $sec->transfer_duration->in_units('minutes') >= 0 ) {
 				$glance .= sprintf(
-					'  (%01d:%02d)  "%s"',
+					'  (%01d:%02d)  %s',
 					$sec->transfer_duration->in_units( 'hours', 'minutes' ),
 					$sec->name
 				);
