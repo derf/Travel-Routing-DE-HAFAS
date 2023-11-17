@@ -9,7 +9,7 @@ use utf8;
 use DateTime;
 use Encode qw(decode);
 use JSON;
-use Getopt::Long    qw(:config no_ignore_case);
+use Getopt::Long    qw(:config no_ignore_case bundling);
 use List::MoreUtils qw(uniq);
 use List::Util      qw(first max);
 use Travel::Routing::DE::HAFAS;
