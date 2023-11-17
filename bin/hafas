@@ -283,31 +283,47 @@ for my $res ( $hafas->connections ) {
 		}
 	}
 
+	my $negative_transfer;
+
 	my $glance = q{};
 	for my $sec ( $res->sections ) {
 		if ( $sec->type ne 'JNY' ) {
 			next;
 		}
 		if ( defined $sec->transfer_duration ) {
-			$glance .= sprintf(
-				'  (%01d:%02d)  %s',
-				$sec->transfer_duration->in_units( 'hours', 'minutes' ),
-				$sec->name
-			);
+			if ( $sec->transfer_duration->in_units('minutes') >= 0 ) {
+				$glance .= sprintf(
+					'  (%01d:%02d)  "%s"',
+					$sec->transfer_duration->in_units( 'hours', 'minutes' ),
+					$sec->name
+				);
+			}
+			else {
+				$negative_transfer = 1;
+				$glance .= sprintf( '  (--:--)  %s', $sec->name );
+			}
 		}
 		else {
 			$glance .= $sec->name;
 		}
 	}
 
-	if ($cancelled) {
-		printf( "--:--  %s  %s\n", display_occupancies( $res->load ), $glance );
+	if ( $cancelled or $negative_transfer ) {
+		printf(
+			"--:--  (%02d:%02d)  %s  %s  %s\n",
+			$res->duration->in_units( 'hours', 'minutes' ),
+			$res->arr->strftime('%H:%M'),
+			display_occupancies( $res->load ), $glance
+		);
 	}
 	else {
 		printf(
-			"%02d:%02d  %s  %s\n",
+			"%s  (%02d:%02d)  %s  %s  %s\n",
+			$res->dep->strftime('%H:%M'),
 			$res->duration->in_units( 'hours', 'minutes' ),
-			display_occupancies( $res->load ), $glance
+			$res->arr->strftime('%H:%M'),
+			display_occupancies( $res->load ),
+			$glance
 		);
 	}
 
