@@ -374,8 +374,11 @@ for my $res ( $hafas->connections ) {
 		}
 		elsif ( $sec->type eq 'WALK' ) {
 			printf(
-				"${output_bold}Walk %dm${output_reset}  (approx. %d minutes)",
-				$sec->distance, $sec->duration->in_units('minutes') );
+				"${output_bold}Walk %dm${output_reset}  (approx. %d minute%s)",
+				$sec->distance,
+				$sec->duration->in_units('minutes'),
+				$sec->duration->in_units('minutes') == 1 ? q{} : 's'
+			);
 		}
 		else {
 			printf("\n???\n");
