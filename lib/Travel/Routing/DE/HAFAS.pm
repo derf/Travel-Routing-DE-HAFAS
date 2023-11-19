@@ -15,7 +15,7 @@ use Encode      qw(decode encode);
 use JSON;
 use LWP::UserAgent;
 use Travel::Routing::DE::HAFAS::Connection;
-use Travel::Routing::DE::HAFAS::Location;
+use Travel::Status::DE::HAFAS::Location;
 use Travel::Status::DE::HAFAS::Message;
 
 our $VERSION = '0.01';
@@ -517,7 +517,7 @@ sub check_mgate {
 sub parse_trips {
 	my ($self) = @_;
 
-	my @locL = map { Travel::Routing::DE::HAFAS::Location->new( loc => $_ ) }
+	my @locL = map { Travel::Status::DE::HAFAS::Location->new( loc => $_ ) }
 	  @{ $self->{raw_json}{svcResL}[0]{res}{common}{locL} // [] };
 
 	my @conL = @{ $self->{raw_json}{svcResL}[0]{res}{outConL} // [] };

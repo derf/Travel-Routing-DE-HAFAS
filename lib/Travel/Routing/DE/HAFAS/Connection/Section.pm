@@ -231,7 +231,7 @@ Arrival delay in minutes. Undef if unknown.
 
 =item $section->arr_loc
 
-Travel::Routing::DE::HAFAS::Location(3pm) object describing the arrival stop.
+Travel::Status::DE::HAFAS::Location(3pm) object describing the arrival stop.
 
 =item $section->arr_platform
 
@@ -253,7 +253,7 @@ Departure dlay in minutes. Undef if unknown.
 
 =item $section->dep_loc
 
-Travel::Routing::DE::HAFAS::Location(3pm) object describing the departure stop.
+Travel::Status::DE::HAFAS::Location(3pm) object describing the departure stop.
 
 =item $section->dep_platform
 

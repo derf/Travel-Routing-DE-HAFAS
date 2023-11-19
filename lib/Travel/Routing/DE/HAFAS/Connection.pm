@@ -208,7 +208,7 @@ if available, falls back to schedule data otherwise.
 
 =item $connection->arr_loc
 
-Travel::Routing::DE::HAFAS::Location(3pm) object describing the arrival stop.
+Travel::Status::DE::HAFAS::Location(3pm) object describing the arrival stop.
 
 =item $connection->arr_platform
 
@@ -230,7 +230,7 @@ data if available, falls back to schedule data otherwise.
 
 =item $connection->dep_loc
 
-Travel::Routing::DE::HAFAS::Location(3pm) object describing the departure stop.
+Travel::Status::DE::HAFAS::Location(3pm) object describing the departure stop.
 
 =item $connection->dep_platform
 
