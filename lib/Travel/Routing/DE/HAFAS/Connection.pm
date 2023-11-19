@@ -60,6 +60,7 @@ sub new {
 		time_zone => 'Europe/Berlin'
 	);
 
+	# dProgType/aProgType: CORRECTED oder PROGNOSED
 	my $sched_dep = $connection->{dep}{dTimeS};
 	my $rt_dep    = $connection->{dep}{dTimeR};
 	my $sched_arr = $connection->{arr}{aTimeS};

@@ -10,6 +10,7 @@ requires 'List::Util';
 requires 'LWP::UserAgent';
 requires 'LWP::Protocol::https';
 requires 'Travel::Status::DE::HAFAS';
+requires 'Travel::Status::DE::HAFAS::Journey',  '5.00';
 requires 'Travel::Status::DE::HAFAS::Location', '5.00';
 requires 'Travel::Status::DE::HAFAS::Message',  '4.19';
 

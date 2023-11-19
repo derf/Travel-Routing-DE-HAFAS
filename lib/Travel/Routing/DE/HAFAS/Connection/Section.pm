@@ -9,13 +9,14 @@ use 5.014;
 use parent 'Class::Accessor';
 use DateTime::Duration;
 use Travel::Routing::DE::HAFAS::Utils;
+use Travel::Status::DE::HAFAS::Journey;
 
 our $VERSION = '0.01';
 
 Travel::Routing::DE::HAFAS::Connection::Section->mk_ro_accessors(
 	qw(type schep_dep rt_dep sched_arr rt_arr dep arr arr_delay dep_delay journey distance duration transfer_duration dep_loc arr_loc
 	  dep_platform arr_platform dep_cancelled arr_cancelled
-	  operator id name category category_long class number line line_no load delay direction)
+	  load)
 );
 
 # {{{ Constructor
@@ -27,7 +28,6 @@ sub new {
 	my $sec   = $opt{sec};
 	my $date  = $opt{date};
 	my $locs  = $opt{locL};
-	my @prodL = @{ $opt{common}{prodL} // [] };
 
 	# himL may only be present in departure monitor mode
 	my @remL = @{ $opt{common}{remL} // [] };
@@ -78,8 +78,6 @@ sub new {
 		$tco->{ $tco_kv->{c} } = $tco_kv->{r};
 	}
 
-	# TODO operator
-
 	my $ref = {
 		type          => $sec->{type},
 		sched_dep     => $sched_dep,
@@ -108,30 +106,12 @@ sub new {
 
 	if ( $sec->{type} eq 'JNY' ) {
 
-		my $journey = $sec->{jny};
-		my $product = $prodL[ $journey->{prodX} ];
-		$ref->{id}            = $journey->{jid};
-		$ref->{direction}     = $journey->{dirTxt};
-		$ref->{name}          = $product->{addName} // $product->{name};
-		$ref->{category}      = $product->{prodCtx}{catOut};
-		$ref->{category_long} = $product->{prodCtx}{catOutL};
-		$ref->{class}         = $product->{cls};
-		$ref->{number}        = $product->{prodCtx}{num};
-		$ref->{line}          = $ref->{name};
-		$ref->{line_no}       = $product->{prodCtx}{line};
-
-		if (    $ref->{name}
-			and $ref->{category}
-			and $ref->{name} eq $ref->{category}
-			and $product->{nameS} )
-		{
-			$ref->{name} .= ' ' . $product->{nameS};
-		}
-
-		my @stops;
-		for my $stop ( @{ $journey->{stopL} // [] } ) {
-			my $loc = $locs->[ $stop->{locX} ];
-		}
+		$ref->{journey} = Travel::Status::DE::HAFAS::Journey->new(
+			common  => $opt{common},
+			locL    => $locs,
+			journey => $sec->{jny},
+			hafas   => $hafas,
+		);
 	}
 	elsif ( $sec->{type} eq 'WALK' ) {
 		$ref->{distance} = $sec->{gis}{dist};
@@ -186,13 +166,16 @@ Travel::Routing::DE::HAFAS::Connection::Section - A single trip between two stop
 
 	# $connection is a Travel::Routing::DE::HAFAS::Connection object
 	for my $sec ( $connection->sections ) {
-		printf("%s -> %s\n%s ab %s\n%s an %s\n\n",
-			$sec->name, $sec->direction,
-			$sec->dep->strftime('%H:%M'),
-			$sec->dep_loc->name,
-			$sec->arr->strftime('%H:%M'),
-			$sec->arr_loc->name,
-		);
+		if ($sec->type eq 'JNY') {
+			printf("%s -> %s\n%s ab %s\n%s an %s\n\n",
+				$sec->journey->name,
+				$sec->journey->direction,
+				$sec->dep->strftime('%H:%M'),
+				$sec->dep_loc->name,
+				$sec->arr->strftime('%H:%M'),
+				$sec->arr_loc->name,
+			);
+		}
 	}
 
 =head1 VERSION
@@ -257,13 +240,6 @@ Travel::Status::DE::HAFAS::Location(3pm) object describing the departure stop.
 
 =item $section->dep_platform
 
-Deprarture platform as string, not necessarily numeric. Undef if unknown.
-
-=item $section->direction (JNY)
-
-Travel direction of this trip; this is typically the text printed on the
-transport vehicle itself. May differ from its terminus.
-
 =item $section->distance (WALK)
 
 Walking distance in meters. Does not take vertical elevation changes into
@@ -274,23 +250,10 @@ account.
 DateTime::Duration(3pm) oobject holding the walking duration.
 Typically assumes a slow pace.
 
-=item $section->id (JNY)
+=item $section->journey (JNY)
 
-HAFAS-internal journey ID.
-
-=item $section->line (JNY)
-
-Trip or line name in a format like "Bus SB16" (Bus line SB16), "RE 42"
-(RegionalExpress train 42) or "IC 2901" (InterCity train 2901, no line
-information). Note that this accessor does not return line information for
-IC/ICE/EC services, even if it is available. Use B<line_no> for those.
-
-=item $section->line_no (JNY)
-
-Line identifier; undef if unknown.
-The line identifier may be a single number such as "11" (underground train line
-U 11), a single word such as "AIR" or a combination (e.g. "SB16").  May also
-provide line numbers of IC/ICE services.
+Travel::Status::DE::HAFAS::Journey(3pm) instance describing the journey
+(mode of transport, intermediate stops, etc.).
 
 =item $sec->load
 
@@ -304,15 +267,6 @@ Returns undef if occupancy data is not available.
 List of Travel::Status::DE::HAFAS::Message(3pm) objects associated with this
 connection section. Typically contains messages related to the mode of
 transport, such as construction sites, Wi-Fi availability, and the like.
-
-=item $section->name (JNY)
-
-Trip or line name in a format like "Bus SB16" (Bus line SB16) or "RE 10111"
-(RegionalExpress train 10111, no line information).
-
-=item $section->number (JNY)
-
-Trip number (e.g. train number); undef if unknown.
 
 =item $section->rt_arr
 

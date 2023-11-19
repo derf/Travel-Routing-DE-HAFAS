@@ -295,16 +295,16 @@ for my $res ( $hafas->connections ) {
 				$glance .= sprintf(
 					'  (%01d:%02d)  %s',
 					$sec->transfer_duration->in_units( 'hours', 'minutes' ),
-					$sec->name
+					$sec->journey->name
 				);
 			}
 			else {
 				$negative_transfer = 1;
-				$glance .= sprintf( '  (--:--)  %s', $sec->name );
+				$glance .= sprintf( '  (--:--)  %s', $sec->journey->name );
 			}
 		}
 		else {
-			$glance .= $sec->name;
+			$glance .= $sec->journey->name;
 		}
 	}
 
@@ -348,9 +348,12 @@ for my $res ( $hafas->connections ) {
 
 	for my $sec ( $res->sections ) {
 		if ( $sec->type eq 'JNY' ) {
-			printf( "${output_bold}%s${output_reset} → %s  %s\n",
-				$sec->name, $sec->direction,
-				display_occupancies( $sec->load ) );
+			printf(
+				"${output_bold}%s${output_reset} → %s  %s\n",
+				$sec->journey->name,
+				$sec->journey->direction,
+				display_occupancies( $sec->load )
+			);
 			printf(
 				"%-5s %-${delay_fmt}s ab  %s%s%s\n",
 				$sec->dep_cancelled
