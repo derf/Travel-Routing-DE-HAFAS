@@ -5,8 +5,9 @@ routing interfaces. See the [Travel::Routing::DE::HAFAS homepage](https://finalr
 
 ## Installation
 
-You have three installation options:
+You have four installation options:
 
+* `.deb` releases for Debian-based distributions
 * Installing the latest release from CPAN
 * Installation from source
 * Using a Docker image
@@ -14,6 +15,29 @@ You have three installation options:
 Except for Docker, **hafas** is available in your PATH after installation.
 You can run `hafas --version` to verify this. Documentation is available via
 `man hafas`.
+
+### Release Builds for Debian
+
+[lib.finalrewind.org/deb](https://lib.finalrewind.org/deb) provides Debian
+packages of all release versions. Note that these are not part of the official
+Debian repository and are not covered by its quality assurance process.
+
+To install the latest release, run:
+
+```
+wget https://lib.finalrewind.org/deb/libtravel-status-de-deutschebahn-perl_latest_all.deb \
+     https://lib.finalrewind.org/deb/libtravel-routing-de-hafas-perl_latest_all.deb
+sudo apt install ./libtravel-status-de-deutschebahn-perl_latest_all.deb \
+                 ./libtravel-routing-de-hafas-perl_latest_all.deb
+rm libtravel-status-de-deutschebahn-perl_latest_all.deb \
+   libtravel-routing-de-hafas-perl_latest_all.deb
+```
+
+Uninstallation works as usual:
+
+```
+sudo apt remove libtravel-routing-de-hafas-perl
+```
 
 ### Installation from CPAN
 
