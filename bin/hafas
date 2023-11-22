@@ -19,6 +19,7 @@ my ( $date, $time, $language );
 my $types = q{};
 my $developer_mode;
 my $json_output;
+my $show_full_route;
 my ( $list_services, $service );
 my ( @excluded_mots, @exclusive_mots );
 my $verbosity = 0;
@@ -45,6 +46,7 @@ my $output_reset = -t STDOUT ? "\033[0m" : q{};
 GetOptions(
 	'd|date=s'     => \$date,
 	'h|help'       => sub { show_help(0) },
+	'f|full-route' => \$show_full_route,
 	'l|language=s' => \$language,
 	'm|mot=s'      => \$types,
 	's|service=s'  => \$service,
@@ -364,6 +366,22 @@ for my $res ( $hafas->connections ) {
 				$sec->dep_platform ? q{: } : q{},
 				$sec->dep_platform // q{},
 			);
+			if ($show_full_route) {
+				for my $stop ( $sec->journey->route ) {
+					if (    $stop->loc != $sec->dep_loc
+						and $stop->loc != $sec->arr_loc )
+					{
+						printf(
+							"%-5s %-${delay_fmt}s     %s%s%s\n",
+							$stop->arr ? $stop->arr->strftime('%H:%M') : q{},
+							format_delay( $stop->arr_delay, $delay_len ),
+							$stop->loc->name,
+							$stop->platform ? q{: } : q{},
+							$stop->platform // q{},
+						);
+					}
+				}
+			}
 			printf(
 				"%-5s %-${delay_fmt}s an  %s%s%s\n",
 				$sec->arr_cancelled

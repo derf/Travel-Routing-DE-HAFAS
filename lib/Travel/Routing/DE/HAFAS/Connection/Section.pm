@@ -108,6 +108,7 @@ sub new {
 
 		$ref->{journey} = Travel::Status::DE::HAFAS::Journey->new(
 			common  => $opt{common},
+			date    => $date,
 			locL    => $locs,
 			journey => $sec->{jny},
 			hafas   => $hafas,
