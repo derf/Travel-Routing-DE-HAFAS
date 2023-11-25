@@ -31,7 +31,7 @@ Module::Build->new(
 		'LWP::UserAgent'                      => 0,
 		'LWP::Protocol::https'                => 0,
 		'Travel::Status::DE::HAFAS'           => 0,
-		'Travel::Status::DE::HAFAS::Journey'  => '5.00',
+		'Travel::Status::DE::HAFAS::Journey'  => '5.01',
 		'Travel::Status::DE::HAFAS::Location' => '5.00',
 		'Travel::Status::DE::HAFAS::Message'  => '4.19',
 	},
