@@ -354,44 +354,43 @@ for my $res ( $hafas->connections ) {
 				"${output_bold}%s${output_reset} → %s  %s\n",
 				$sec->journey->name,
 				$sec->journey->direction,
-				display_occupancies( $sec->load )
-			);
-			printf(
-				"%-5s %-${delay_fmt}s ab  %s%s%s\n",
-				$sec->dep_cancelled
-				? '--:--'
-				: $sec->dep->strftime('%H:%M'),
-				format_delay( $sec->dep_delay, $delay_len ),
-				$sec->dep_loc->name,
-				$sec->dep_platform ? q{: } : q{},
-				$sec->dep_platform // q{},
+				$show_full_route ? q{} : display_occupancies( $sec->load ),
 			);
 			if ($show_full_route) {
 				for my $stop ( $sec->journey->route ) {
-					if (    $stop->loc != $sec->dep_loc
-						and $stop->loc != $sec->arr_loc )
-					{
-						printf(
-							"%-5s %-${delay_fmt}s     %s%s%s\n",
-							$stop->arr ? $stop->arr->strftime('%H:%M') : q{},
-							format_delay( $stop->arr_delay, $delay_len ),
-							$stop->loc->name,
-							$stop->platform ? q{: } : q{},
-							$stop->platform // q{},
-						);
-					}
+					printf(
+						"%-5s %-${delay_fmt}s %s  %s%s%s\n",
+						$stop->arr ? $stop->arr->strftime('%H:%M') : q{},
+						format_delay( $stop->arr_delay, $delay_len ),
+						display_occupancies( $stop->load ),
+						$stop->loc->name,
+						$stop->platform ? q{: } : q{},
+						$stop->platform // q{},
+					);
 				}
 			}
-			printf(
-				"%-5s %-${delay_fmt}s an  %s%s%s\n",
-				$sec->arr_cancelled
-				? '--:--'
-				: $sec->arr->strftime('%H:%M'),
-				format_delay( $sec->arr_delay, $delay_len ),
-				$sec->arr_loc->name,
-				$sec->arr_platform ? q{: } : q{},
-				$sec->arr_platform // q{},
-			);
+			else {
+				printf(
+					"%-5s %-${delay_fmt}s ab  %s%s%s\n",
+					$sec->dep_cancelled
+					? '--:--'
+					: $sec->dep->strftime('%H:%M'),
+					format_delay( $sec->dep_delay, $delay_len ),
+					$sec->dep_loc->name,
+					$sec->dep_platform ? q{: } : q{},
+					$sec->dep_platform // q{},
+				);
+				printf(
+					"%-5s %-${delay_fmt}s an  %s%s%s\n",
+					$sec->arr_cancelled
+					? '--:--'
+					: $sec->arr->strftime('%H:%M'),
+					format_delay( $sec->arr_delay, $delay_len ),
+					$sec->arr_loc->name,
+					$sec->arr_platform ? q{: } : q{},
+					$sec->arr_platform // q{},
+				);
+			}
 		}
 		elsif ( $sec->type eq 'WALK' ) {
 			printf(
