@@ -1,7 +1,9 @@
 # hafas - Commandline Public Transit Routing Interface
 
 **hafas** is a commandline client and Perl module for HAFAS pulic transit
-routing interfaces. See the [Travel::Routing::DE::HAFAS homepage](https://finalrewind.org/projects/Travel-Routing-DE-HAFAS/) for details.
+routing interfaces. See the [Travel::Routing::DE::HAFAS
+homepage](https://finalrewind.org/projects/Travel-Routing-DE-HAFAS/) for
+details.
 
 ## Installation
 
@@ -149,7 +151,7 @@ Otherwise (also works with carton):
 perl -Ilocal/lib/perl5 -Ilib bin/hafas --version
 ```
 
-### Running hafas-m via Docker
+### Running hafas via Docker
 
 A hafas image is available on Docker Hub. It is intended for testing
 purposes: due to the latencies involved in spawning a container for each
