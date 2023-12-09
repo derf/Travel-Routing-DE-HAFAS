@@ -15,7 +15,7 @@ use List::Util      qw(first max);
 use Travel::Routing::DE::HAFAS;
 use Travel::Status::DE::HAFAS;
 
-my ( $date, $time, $language );
+my ( $date, $time, $arrival, $language );
 my $types = q{};
 my $developer_mode;
 my $json_output;
@@ -44,18 +44,19 @@ my $output_bold  = -t STDOUT ? "\033[1m" : q{};
 my $output_reset = -t STDOUT ? "\033[0m" : q{};
 
 GetOptions(
-	'd|date=s'     => \$date,
-	'h|help'       => sub { show_help(0) },
-	'f|full-route' => \$show_full_route,
-	'l|language=s' => \$language,
-	'm|mot=s'      => \$types,
-	's|service=s'  => \$service,
-	't|time=s'     => \$time,
-	'v|verbose+'   => \$verbosity,
-	'V|version'    => \&show_version,
-	'devmode'      => \$developer_mode,
-	'json'         => \$json_output,
-	'list'         => \$list_services,
+	'a|arrive=s'      => sub { $arrival = 1; $time = $_[1] },
+	'd|date=s'        => \$date,
+	'h|help'          => sub { show_help(0) },
+	'f|full-route'    => \$show_full_route,
+	'l|language=s'    => \$language,
+	'm|mot=s'         => \$types,
+	's|service=s'     => \$service,
+	't|time|depart=s' => \$time,
+	'v|verbose+'      => \$verbosity,
+	'V|version'       => \&show_version,
+	'devmode'         => \$developer_mode,
+	'json'            => \$json_output,
+	'list'            => \$list_services,
 
 ) or show_help(1);
 
@@ -86,6 +87,7 @@ my %opt = (
 	to_stop        => $to_stop,
 	developer_mode => $developer_mode,
 	service        => $service,
+	arrival        => $arrival,
 	language       => $language,
 );
 
@@ -442,6 +444,11 @@ between two stops and prints the results.
 
 =over
 
+=item B<-a>, B<--arriva> I<hh>:I<mm>
+
+Request connections that arrive at the destination before I<hh>:I<mm>.
+Overrides B<--time> / B<--depart>.
+
 =item B<-d>, B<--date> I<dd>.I<mm>.[I<yyyy>]
 
 Planned departure (or arrival) date.  Default: today.
@@ -474,9 +481,10 @@ The I<mot> types depend on the used service. Use C<< -m help >> to list them.
 Use the API provided by I<service> for routing; defaults to DB (Deutsche Bahn).
 See B<--list> for a list of known services.
 
-=item B<-t>, B<--time> I<hh>:I<mm>
+=item B<-t>, B<--time>, B<--depart> I<hh>:I<mm>
 
-Planned departure (or arrival) time.  Default: now.
+Request connections that depart from the origin after I<hh>:I<mm>.
+Default: now.
 
 =item B<-v>, B<--verbose>
 

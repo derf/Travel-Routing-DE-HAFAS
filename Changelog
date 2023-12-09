@@ -1,5 +1,6 @@
 git HEAD
 
+    * hafas: Add --depart and -a / --arrive options
     * HAFAS->new: Add arrival option
 
 Travel::Routing::DE::HAFAS 0.02 - Sat Nov 25 2023
