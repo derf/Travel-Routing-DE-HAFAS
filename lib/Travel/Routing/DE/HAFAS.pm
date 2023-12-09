@@ -216,8 +216,9 @@ sub new {
 
 	my $req;
 
-	my $date = ( $conf{datetime} // $now )->strftime('%Y%m%d');
-	my $time = ( $conf{datetime} // $now )->strftime('%H%M%S');
+	my $date    = ( $conf{datetime} // $now )->strftime('%Y%m%d');
+	my $time    = ( $conf{datetime} // $now )->strftime('%H%M%S');
+	my $outFrwd = $conf{arrival} ? \0 : undef;
 
 	my ( $from_lid, $to_lid );
 	if ( $self->{from_stop} =~ m{ ^ [0-9]+ $ }x ) {
@@ -243,7 +244,7 @@ sub new {
 					numF       => 6,
 					maxChg     => undef,
 					minChgTime => undef,
-					outFrwd    => undef,
+					outFrwd    => $outFrwd,
 					viaLocL    => undef,
 					trfReq     => {
 						cType    => 'PK',
@@ -691,6 +692,12 @@ must be specified either by name or by EVA ID (e.g. 8000080 for Dortmund Hbf).
 
 Destination stop, e.g. "Essen HBf" or "Alfredusbad, Essen (Ruhr)". The stop
 must be specified either by name or by EVA ID (e.g. 8000080 for Dortmund Hbf).
+
+=item B<arrival> => I<bool>
+
+If true: request connections that arrive at the destination before the
+specified time. If false (default): request connections that leave at the
+origin after the specified time.
 
 =item B<cache> => I<Cache::File object>
 
