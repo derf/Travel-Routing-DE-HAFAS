@@ -453,6 +453,10 @@ Overrides B<--time> / B<--depart>.
 
 Planned departure (or arrival) date.  Default: today.
 
+=item B<-f>, B<--full-route>
+
+Show intermediate stops of each connection.
+
 =item B<-l>, B<--language> I<language>
 
 Request free-text messages to be provided in I<language>.
