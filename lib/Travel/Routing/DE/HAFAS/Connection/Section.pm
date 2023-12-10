@@ -153,6 +153,23 @@ sub messages {
 	return;
 }
 
+sub TO_JSON {
+	my ($self) = @_;
+
+	my $ret = { %{$self} };
+
+	for my $k ( keys %{$ret} ) {
+		if ( ref( $ret->{$k} ) eq 'DateTime' ) {
+			$ret->{$k} = $ret->{$k}->epoch;
+		}
+		if ( ref( $ret->{$k} ) eq 'DateTime::Duration' ) {
+			$ret->{$k} = [ $ret->{$k}->in_units( 'days', 'hours', 'minutes' ) ];
+		}
+	}
+
+	return $ret;
+}
+
 # }}}
 
 1;
