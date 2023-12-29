@@ -217,6 +217,9 @@ sub show_similar_stops {
 sub display_occupancy {
 	my ($occupancy) = @_;
 
+	if (not defined $occupancy) {
+		return q{?};
+	}
 	if ( $occupancy == 1 ) {
 		return q{.};
 	}
