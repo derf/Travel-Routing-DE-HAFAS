@@ -217,7 +217,7 @@ sub show_similar_stops {
 sub display_occupancy {
 	my ($occupancy) = @_;
 
-	if (not defined $occupancy) {
+	if ( not defined $occupancy ) {
 		return q{?};
 	}
 	if ( $occupancy == 1 ) {
@@ -325,14 +325,14 @@ for my $res ( $hafas->connections ) {
 		printf(
 			"--:--  (%02d:%02d)  %s  %s  %s\n",
 			$res->duration->in_units( 'hours', 'minutes' ),
-			$res->arr->strftime('%H:%M'),
+			$res->arr->strftime('       %H:%M'),
 			display_occupancies( $res->load ), $glance
 		);
 	}
 	else {
 		printf(
 			"%s  (%02d:%02d)  %s  %s  %s\n",
-			$res->dep->strftime('%H:%M'),
+			$res->dep->strftime('%d.%m. %H:%M'),
 			$res->duration->in_units( 'hours', 'minutes' ),
 			$res->arr->strftime('%H:%M'),
 			display_occupancies( $res->load ),
