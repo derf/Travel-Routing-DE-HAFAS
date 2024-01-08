@@ -297,11 +297,15 @@ for my $res ( $hafas->connections ) {
 	}
 
 	my $negative_transfer;
+	my $part_cancelled;
 
 	my $glance = q{};
 	for my $sec ( $res->sections ) {
 		if ( $sec->type ne 'JNY' ) {
 			next;
+		}
+		if ( $sec->dep_cancelled or $sec->arr_cancelled ) {
+			$part_cancelled = 1;
 		}
 		if ( defined $sec->transfer_duration ) {
 			if ( $sec->transfer_duration->in_units('minutes') >= 0 ) {
@@ -321,12 +325,14 @@ for my $res ( $hafas->connections ) {
 		}
 	}
 
-	if ( $cancelled or $negative_transfer ) {
+	if ( $cancelled or $negative_transfer or $part_cancelled ) {
 		printf(
-			"--:--  (%02d:%02d)  %s  %s  %s\n",
+			"%s  (%02d:%02d)  %s  %s  %s\n",
+			$res->dep->strftime('XX.XX. %H:%M'),
 			$res->duration->in_units( 'hours', 'minutes' ),
-			$res->arr->strftime('       %H:%M'),
-			display_occupancies( $res->load ), $glance
+			$res->arr->strftime('%H:%M'),
+			display_occupancies( $res->load ),
+			$glance
 		);
 	}
 	else {
