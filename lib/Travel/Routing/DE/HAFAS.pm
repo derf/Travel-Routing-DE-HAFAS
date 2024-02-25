@@ -108,8 +108,19 @@ my %hafas_instance = (
 	'ÖBB' => {
 		mgate       => 'https://fahrplan.oebb.at/bin/mgate.exe',
 		name        => 'Österreichische Bundesbahnen',
-		productbits =>
-		  [qw[ice ice ice regio regio s bus ferry u tram ice ondemand ice]],
+		productbits => [
+			[ ice_rj => 'long distance trains' ],
+			[ sev    => 'rail replacement service' ],
+			[ ic_ec  => 'long distance trains' ],
+			[ d_n    => 'night trains and rapid trains' ],
+			[ regio  => 'regional trains' ],
+			[ s      => 'suburban trains' ],
+			[ bus    => 'busses' ],
+			[ ferry  => 'maritime transit' ],
+			[ u      => 'underground' ],
+			[ tram   => 'trams' ],
+			[ other  => 'other transit services' ]
+		],
 		request => {
 			client => {
 				id   => 'OEBB',
@@ -379,7 +390,12 @@ sub mot_mask {
 
 	my %mot_pos;
 	for my $i ( 0 .. $#{ $hafas_instance{$service}{productbits} } ) {
-		$mot_pos{ $hafas_instance{$service}{productbits}[$i] } = $i;
+		if ( ref( $hafas_instance{$service}{productbits}[$i] ) eq 'ARRAY' ) {
+			$mot_pos{ $hafas_instance{$service}{productbits}[$i][0] } = $i;
+		}
+		else {
+			$mot_pos{ $hafas_instance{$service}{productbits}[$i] } = $i;
+		}
 	}
 
 	if ( my @mots = @{ $self->{exclusive_mots} // [] } ) {
