@@ -77,12 +77,8 @@ if ($list_services) {
 
 parse_mot_options();
 
-my ( $from_stop, $via_stop, $to_stop ) = @ARGV;
-
-if ( $via_stop and not $to_stop ) {
-	$to_stop  = $via_stop;
-	$via_stop = undef;
-}
+my ( $from_stop, @via_stops ) = @ARGV;
+my $to_stop = pop @via_stops;
 
 if ( not( $from_stop and $to_stop ) ) {
 	show_help(1);
@@ -91,7 +87,7 @@ if ( not( $from_stop and $to_stop ) ) {
 my %opt = (
 	service        => $service,
 	from_stop      => $from_stop,
-	via_stop       => $via_stop,
+	via_stops      => \@via_stops,
 	to_stop        => $to_stop,
 	excluded_mots  => \@excluded_mots,
 	exclusive_mots => \@exclusive_mots,
@@ -456,7 +452,7 @@ hafas - Interface to HAFAS (e.g. Deutsche Bahn) itinerary services
 =head1 SYNOPSIS
 
 B<hafas> [B<-d> I<date>] [B<-t> I<time>] [B<-m> I<motlist>]
-[B<-s> I<service>] [B<-l> I<language>] [B<-v>] I<from> [I<via>] I<to>
+[B<-s> I<service>] [B<-l> I<language>] [B<-v>] I<from> [I<via> ...] I<to>
 
 =head1 VERSION
 

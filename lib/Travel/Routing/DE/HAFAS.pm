@@ -218,7 +218,7 @@ sub new {
 		messages       => [],
 		results        => [],
 		from_stop      => $conf{from_stop},
-		via_stop       => $conf{via_stop},
+		via_stops      => $conf{via_stops} // [],
 		to_stop        => $conf{to_stop},
 		ua             => $ua,
 		now            => $now,
@@ -232,41 +232,21 @@ sub new {
 	my $time    = ( $conf{datetime} // $now )->strftime('%H%M%S');
 	my $outFrwd = $conf{arrival} ? \0 : undef;
 
-	my ( $from_lid, $via_lid, $to_lid );
-	if ( $self->{from_stop} =~ m{ ^ [0-9]+ $ }x ) {
-		$from_lid = 'A=1@L=' . $self->{from_stop} . '@';
-	}
-	else {
-		$from_lid = 'A=1@O=' . $self->{from_stop} . '@';
-	}
-	if ( $self->{to_stop} =~ m{ ^ [0-9]+ $ }x ) {
-		$to_lid = 'A=1@L=' . $self->{to_stop} . '@';
-	}
-	else {
-		$to_lid = 'A=1@O=' . $self->{to_stop} . '@';
-	}
-	if ( $self->{via_stop} ) {
-		if ( $self->{via_stop} =~ m{ ^ [0-9]+ $ }x ) {
-			$via_lid = 'A=1@L=' . $self->{via_stop} . '@';
-		}
-		else {
-			$via_lid = 'A=1@O=' . $self->{via_stop} . '@';
-		}
-	}
+	my @via_locs = map { $self->stop_to_hafas($_) } @{ $self->{via_stops} };
 
 	$req = {
 		svcReqL => [
 			{
 				meth => 'TripSearch',
 				req  => {
-					depLocL    => [ { lid => $from_lid } ],
-					arrLocL    => [ { lid => $to_lid } ],
-					numF       => 6,
-					maxChg     => $conf{max_change},
+					depLocL => [ $self->stop_to_hafas( $self->{from_stop} ) ],
+					arrLocL => [ $self->stop_to_hafas( $self->{to_stop} ) ],
+					numF    => 6,
+					maxChg  => $conf{max_change},
 					minChgTime => undef,
 					outFrwd    => $outFrwd,
-					viaLocL    => $via_lid
-					? [ { loc => { lid => $via_lid } } ]
+					viaLocL    => @via_locs
+					? [ map { { loc => $_ } } @via_locs ]
 					: undef,
 					trfReq => {
 						cType    => 'PK',
@@ -423,6 +403,17 @@ sub mot_mask {
 	}
 
 	return $mot_mask;
+}
+
+sub stop_to_hafas {
+	my ( $self, $stop ) = @_;
+
+	if ( $stop =~ m{ ^ [0-9]+ $ }x ) {
+		return { lid => 'A=1@L=' . $stop . '@' };
+	}
+	else {
+		return { lid => 'A=1@O=' . $stop . '@' };
+	}
 }
 
 sub post_with_cache {
@@ -720,10 +711,10 @@ must be specified either by name or by EVA ID (e.g. 8000080 for Dortmund Hbf).
 Destination stop, e.g. "Essen HBf" or "Alfredusbad, Essen (Ruhr)". The stop
 must be specified either by name or by EVA ID (e.g. 8000080 for Dortmund Hbf).
 
-=item B<via_stop> => I<stop>
+=item B<via_stops> => [I<stop1>, I<stop2>, ...]
 
-Only return connections that pass I<stop>. It must be specified either by name
-or by EVA ID (e.g. 8000080 for Dortmund Hbf).
+Only return connections that pass all specified stops. Individual stops are
+identified by name or by EVA ID (e.g. 8000080 for Dortmund Hbf).
 
 =item B<arrival> => I<bool>
 
