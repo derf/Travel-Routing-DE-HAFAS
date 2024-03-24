@@ -218,6 +218,7 @@ sub new {
 		messages       => [],
 		results        => [],
 		from_stop      => $conf{from_stop},
+		via_stop       => $conf{via_stop},
 		to_stop        => $conf{to_stop},
 		ua             => $ua,
 		now            => $now,
@@ -231,7 +232,7 @@ sub new {
 	my $time    = ( $conf{datetime} // $now )->strftime('%H%M%S');
 	my $outFrwd = $conf{arrival} ? \0 : undef;
 
-	my ( $from_lid, $to_lid );
+	my ( $from_lid, $via_lid, $to_lid );
 	if ( $self->{from_stop} =~ m{ ^ [0-9]+ $ }x ) {
 		$from_lid = 'A=1@L=' . $self->{from_stop} . '@';
 	}
@@ -243,6 +244,14 @@ sub new {
 	}
 	else {
 		$to_lid = 'A=1@O=' . $self->{to_stop} . '@';
+	}
+	if ( $self->{via_stop} ) {
+		if ( $self->{via_stop} =~ m{ ^ [0-9]+ $ }x ) {
+			$via_lid = 'A=1@L=' . $self->{via_stop} . '@';
+		}
+		else {
+			$via_lid = 'A=1@O=' . $self->{via_stop} . '@';
+		}
 	}
 
 	$req = {
@@ -256,8 +265,10 @@ sub new {
 					maxChg     => $conf{max_change},
 					minChgTime => undef,
 					outFrwd    => $outFrwd,
-					viaLocL    => undef,
-					trfReq     => {
+					viaLocL    => $via_lid
+					? [ { loc => { lid => $via_lid } } ]
+					: undef,
+					trfReq => {
 						cType    => 'PK',
 						tvlrProf => [ { type => 'E' } ],
 					},
@@ -708,6 +719,11 @@ must be specified either by name or by EVA ID (e.g. 8000080 for Dortmund Hbf).
 
 Destination stop, e.g. "Essen HBf" or "Alfredusbad, Essen (Ruhr)". The stop
 must be specified either by name or by EVA ID (e.g. 8000080 for Dortmund Hbf).
+
+=item B<via_stop> => I<stop>
+
+Only return connections that pass I<stop>. It must be specified either by name
+or by EVA ID (e.g. 8000080 for Dortmund Hbf).
 
 =item B<arrival> => I<bool>
 
