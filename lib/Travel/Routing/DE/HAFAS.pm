@@ -253,7 +253,7 @@ sub new {
 					depLocL    => [ { lid => $from_lid } ],
 					arrLocL    => [ { lid => $to_lid } ],
 					numF       => 6,
-					maxChg     => undef,
+					maxChg     => $conf{max_change},
 					minChgTime => undef,
 					outFrwd    => $outFrwd,
 					viaLocL    => undef,
@@ -748,6 +748,10 @@ values. Providing an unsupported or invalid value may lead to garbage output.
 
 Passed on to C<< LWP::UserAgent->new >>. Defaults to C<< { timeout => 10 } >>,
 pass an empty hashref to call the LWP::UserAgent constructor without arguments.
+
+=item B<max_change> => I<count>
+
+Request connections with no more than I<count> changeovers.
 
 =item B<service> => I<service>
 
