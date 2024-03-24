@@ -721,18 +721,18 @@ Store HAFAS replies in the provided cache object.  This module works with
 real-time data, so the object should be configured for an expiry of one to two
 minutes.
 
-=item B<datetime> => I<DateTime object> (station)
+=item B<datetime> => I<DateTime object>
 
 Date and time for itinerary request.  Defaults to now.
 
-=item B<excluded_mots> => [I<mot1>, I<mot2>, ...] (geoSearch, station)
+=item B<excluded_mots> => [I<mot1>, I<mot2>, ...]
 
 By default, all modes of transport (trains, trams, buses etc.) are considered.
 If this option is set, all modes appearing in I<mot1>, I<mot2>, ... will
 be excluded. The supported modes depend on B<service>, use
 B<get_services> or B<get_service> to get the supported values.
 
-=item B<exclusive_mots> => [I<mot1>, I<mot2>, ...] (geoSearch, station)
+=item B<exclusive_mots> => [I<mot1>, I<mot2>, ...]
 
 If this option is set, only the modes of transport appearing in I<mot1>,
 I<mot2>, ...  will be considered.  The supported modes depend on B<service>,
