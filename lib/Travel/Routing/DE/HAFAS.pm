@@ -243,7 +243,7 @@ sub new {
 					arrLocL => [ $self->stop_to_hafas( $self->{to_stop} ) ],
 					numF    => 6,
 					maxChg  => $conf{max_change},
-					minChgTime => undef,
+					minChgTime => $conf{min_change_time},
 					outFrwd    => $outFrwd,
 					viaLocL    => @via_locs
 					? [ map { { loc => $_ } } @via_locs ]
@@ -759,6 +759,12 @@ pass an empty hashref to call the LWP::UserAgent constructor without arguments.
 =item B<max_change> => I<count>
 
 Request connections with no more than I<count> changeovers.
+
+=item B<min_change_time> => I<minutes>
+
+Request connections with scheduled changeover durations of at least I<minutes>.
+Note that this does not account for real-time data: the backend may return
+delayed connections that violate the specified changeover duration.
 
 =item B<service> => I<service>
 
