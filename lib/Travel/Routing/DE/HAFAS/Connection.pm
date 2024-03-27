@@ -24,7 +24,8 @@ sub new {
 
 	my $hafas      = $opt{hafas};
 	my $connection = $opt{connection};
-	my $locs       = $opt{locL};
+	my $locL       = $opt{locL};
+	my $prodL      = $opt{prodL};
 
 	# himL may only be present in departure monitor mode
 	my @remL = @{ $opt{common}{remL} // [] };
@@ -83,7 +84,8 @@ sub new {
 			Travel::Routing::DE::HAFAS::Connection::Section->new(
 				common => $opt{common},
 				date   => $date,
-				locL   => $locs,
+				locL   => $locL,
+				prodL  => $prodL,
 				sec    => $sec,
 				hafas  => $hafas,
 			)
@@ -126,8 +128,8 @@ sub new {
 		  // $connection->{dep}{dPlatfS},
 		arr_platform => $connection->{arr}{aPlatfR}
 		  // $connection->{arr}{aPlatfS},
-		dep_loc  => $locs->[ $connection->{dep}{locX} ],
-		arr_loc  => $locs->[ $connection->{arr}{locX} ],
+		dep_loc  => $locL->[ $connection->{dep}{locX} ],
+		arr_loc  => $locL->[ $connection->{arr}{locX} ],
 		load     => $tco,
 		messages => \@messages,
 		sections => \@sections,

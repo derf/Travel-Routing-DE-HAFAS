@@ -27,7 +27,8 @@ sub new {
 	my $hafas = $opt{hafas};
 	my $sec   = $opt{sec};
 	my $date  = $opt{date};
-	my $locs  = $opt{locL};
+	my $locL  = $opt{locL};
+	my $prodL = $opt{prodL};
 
 	# himL may only be present in departure monitor mode
 	my @remL = @{ $opt{common}{remL} // [] };
@@ -86,8 +87,8 @@ sub new {
 		rt_arr        => $rt_arr,
 		dep           => $rt_dep // $sched_dep,
 		arr           => $rt_arr // $sched_arr,
-		dep_loc       => $locs->[ $sec->{dep}{locX} ],
-		arr_loc       => $locs->[ $sec->{arr}{locX} ],
+		dep_loc       => $locL->[ $sec->{dep}{locX} ],
+		arr_loc       => $locL->[ $sec->{arr}{locX} ],
 		dep_platform  => $sec->{dep}{dplatfR} // $sec->{dep}{dPlatfS},
 		arr_platform  => $sec->{arr}{aplatfR} // $sec->{arr}{aPlatfS},
 		dep_cancelled => $sec->{dep}{dCncl},
@@ -109,7 +110,8 @@ sub new {
 		$ref->{journey} = Travel::Status::DE::HAFAS::Journey->new(
 			common  => $opt{common},
 			date    => $date,
-			locL    => $locs,
+			locL    => $locL,
+			prodL   => $prodL,
 			journey => $sec->{jny},
 			hafas   => $hafas,
 		);

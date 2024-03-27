@@ -536,8 +536,17 @@ sub check_mgate {
 sub parse_trips {
 	my ($self) = @_;
 
+	my $common = $self->{raw_json}{svcResL}[0]{res}{common};
+
 	my @locL = map { Travel::Status::DE::HAFAS::Location->new( loc => $_ ) }
-	  @{ $self->{raw_json}{svcResL}[0]{res}{common}{locL} // [] };
+	  @{ $common->{locL} // [] };
+
+	my @prodL = map {
+		Travel::Status::DE::HAFAS::Product->new(
+			common  => $common,
+			product => $_
+		)
+	} @{ $common->{prodL} // [] };
 
 	my @conL = @{ $self->{raw_json}{svcResL}[0]{res}{outConL} // [] };
 	for my $con (@conL) {
@@ -546,6 +555,7 @@ sub parse_trips {
 			Travel::Routing::DE::HAFAS::Connection->new(
 				common     => $self->{raw_json}{svcResL}[0]{res}{common},
 				locL       => \@locL,
+				prodL      => \@prodL,
 				connection => $con,
 				hafas      => $self,
 			)
