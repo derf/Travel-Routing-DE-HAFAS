@@ -434,6 +434,14 @@ for my $res ( $hafas->connections ) {
 				$sec->duration->in_units('minutes') == 1 ? q{} : 's'
 			);
 		}
+		elsif ( $sec->type eq 'TRSF' ) {
+			printf(
+"${output_bold}Transfer %.1fkm${output_reset} with local transit  (approx. %d minute%s)",
+				$sec->distance / 1000,
+				$sec->duration->in_units('minutes'),
+				$sec->duration->in_units('minutes') == 1 ? q{} : 's'
+			);
+		}
 		else {
 			printf("\n???\n");
 		}

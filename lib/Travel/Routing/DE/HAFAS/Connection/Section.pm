@@ -126,7 +126,7 @@ sub new {
 			hafas   => $hafas,
 		);
 	}
-	elsif ( $sec->{type} eq 'WALK' ) {
+	elsif ( $sec->{type} eq 'TRSF' or $sec->{type} eq 'WALK' ) {
 		$ref->{distance} = $sec->{gis}{dist};
 		my $duration = $sec->{gis}{durS};
 		$ref->{duration} = DateTime::Duration->new(
@@ -270,15 +270,15 @@ Travel::Status::DE::HAFAS::Location(3pm) object describing the departure stop.
 
 =item $section->dep_platform
 
-=item $section->distance (WALK)
+=item $section->distance (TRSF, WALK)
 
-Walking distance in meters. Does not take vertical elevation changes into
-account.
+Transfer or walking distance in meters. Does not take vertical elevation
+changes into account.
 
-=item $section->duration (WALK)
+=item $section->duration (TRSF, WALK)
 
-DateTime::Duration(3pm) oobject holding the walking duration.
-Typically assumes a slow pace.
+DateTime::Duration(3pm) oobject holding the estimated transfer or walk
+duration. Typically assumes a slow pace.
 
 =item $section->journey (JNY)
 
@@ -328,7 +328,8 @@ Undef for the first journey in a connection.
 =item $section->type
 
 Type of this section as exposeed by the HAFAS backend.
-Known types: B<JNY> (a public transit journey) and B<WALK> (walking).
+Known types: B<JNY> (a public transit journey), B<TRSF> (unspecified local
+transit), and B<WALK> (walking).
 
 =back
 
