@@ -115,6 +115,8 @@ sub new {
 		$ref->{arr_delay} = ( $rt_arr->epoch - $sched_arr->epoch ) / 60;
 	}
 
+	# known types according to 2015 DB Navigator:
+	# HIDE, JNY, WALK, BIKE, KISS, PARK, TAXI, TRSF, DEVI
 	if ( $sec->{type} eq 'JNY' ) {
 
 		$ref->{journey} = Travel::Status::DE::HAFAS::Journey->new(
