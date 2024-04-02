@@ -62,20 +62,30 @@ sub new {
 	);
 
 	# dProgType/aProgType: CORRECTED oder PROGNOSED
-	my $sched_dep = $connection->{dep}{dTimeS};
-	my $rt_dep    = $connection->{dep}{dTimeR};
-	my $sched_arr = $connection->{arr}{aTimeS};
-	my $rt_arr    = $connection->{arr}{aTimeR};
-
-	for my $ts ( $sched_dep, $rt_dep, $sched_arr, $rt_arr ) {
-		if ($ts) {
-			$ts = handle_day_change(
-				date     => $date,
-				time     => $ts,
-				strp_obj => $strptime,
-			);
-		}
-	}
+	my $sched_dep = handle_day_change(
+		date     => $date,
+		time     => $connection->{dep}{dTimeS},
+		offset   => $connection->{dep}{dTZOffset},
+		strp_obj => $strptime,
+	);
+	my $rt_dep = handle_day_change(
+		date     => $date,
+		time     => $connection->{dep}{dTimeR},
+		offset   => $connection->{dep}{dTZOffset},
+		strp_obj => $strptime,
+	);
+	my $sched_arr = handle_day_change(
+		date     => $date,
+		time     => $connection->{arr}{aTimeS},
+		offset   => $connection->{arr}{aTZOffset},
+		strp_obj => $strptime,
+	);
+	my $rt_arr = handle_day_change(
+		date     => $date,
+		time     => $connection->{arr}{aTimeR},
+		offset   => $connection->{arr}{aTZOffset},
+		strp_obj => $strptime,
+	);
 
 	my @sections;
 	for my $sec (@secL) {

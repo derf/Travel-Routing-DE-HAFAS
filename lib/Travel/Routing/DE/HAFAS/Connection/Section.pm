@@ -58,20 +58,30 @@ sub new {
 		time_zone => 'Europe/Berlin'
 	);
 
-	my $sched_dep = $sec->{dep}{dTimeS};
-	my $rt_dep    = $sec->{dep}{dTimeR};
-	my $sched_arr = $sec->{arr}{aTimeS};
-	my $rt_arr    = $sec->{arr}{aTimeR};
-
-	for my $ts ( $sched_dep, $rt_dep, $sched_arr, $rt_arr ) {
-		if ($ts) {
-			$ts = handle_day_change(
-				date     => $date,
-				time     => $ts,
-				strp_obj => $strptime,
-			);
-		}
-	}
+	my $sched_dep = handle_day_change(
+		date     => $date,
+		time     => $sec->{dep}{dTimeS},
+		offset   => $sec->{dep}{dTZOffset},
+		strp_obj => $strptime,
+	);
+	my $rt_dep = handle_day_change(
+		date     => $date,
+		time     => $sec->{dep}{dTimeR},
+		offset   => $sec->{dep}{dTZOffset},
+		strp_obj => $strptime,
+	);
+	my $sched_arr = handle_day_change(
+		date     => $date,
+		time     => $sec->{arr}{aTimeS},
+		offset   => $sec->{arr}{aTZOffset},
+		strp_obj => $strptime,
+	);
+	my $rt_arr = handle_day_change(
+		date     => $date,
+		time     => $sec->{arr}{aTimeR},
+		offset   => $sec->{arr}{aTZOffset},
+		strp_obj => $strptime,
+	);
 
 	my $tco = {};
 	for my $tco_id ( @{ $sec->{jny}{dTrnCmpSX}{tcocX} // [] } ) {

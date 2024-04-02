@@ -13,7 +13,12 @@ sub handle_day_change {
 	my (%opt)       = @_;
 	my $datestr     = $opt{date};
 	my $timestr     = $opt{time};
+	my $tz_offset   = $opt{offset};
 	my $offset_days = 0;
+
+	if ( not defined $timestr ) {
+		return;
+	}
 
 	# timestr may include a day offset, resulting in DDHHMMSS
 	if ( length($timestr) == 8 ) {
@@ -24,6 +29,11 @@ sub handle_day_change {
 
 	if ($offset_days) {
 		$ts->add( days => $offset_days );
+	}
+
+	if ( defined $tz_offset and $tz_offset != $ts->offset / 60 ) {
+		my $ts_offset = $tz_offset - $ts->offset / 60;
+		$ts->subtract( minutes => $ts_offset );
 	}
 
 	return $ts;
