@@ -20,6 +20,7 @@ my $types = q{};
 my $developer_mode;
 my ( $json_output, $raw_json_output );
 my $show_full_route;
+my $show_jid;
 my $exclude_infeasible;
 my ( $list_services, $service );
 my ( @excluded_mots, @exclusive_mots );
@@ -51,8 +52,9 @@ GetOptions(
 	'c|max-change=s'       => \$max_change,
 	'C|change-time=s'      => \$min_change_time,
 	'd|date=s'             => \$date,
-	'h|help'               => sub { show_help(0) },
 	'f|full-route'         => \$show_full_route,
+	'h|help'               => sub { show_help(0) },
+	'j|with-jid'           => \$show_jid,
 	'l|language=s'         => \$language,
 	'm|mot=s'              => \$types,
 	's|service=s'          => \$service,
@@ -425,6 +427,9 @@ for my $res ( $hafas->connections ) {
 					$sec->arr_platform // q{},
 				);
 			}
+			if ($show_jid) {
+				say $sec->journey->id;
+			}
 		}
 		elsif ( $sec->type eq 'WALK' ) {
 			printf(
@@ -506,6 +511,11 @@ Planned departure (or arrival) date.  Default: today.
 =item B<-f>, B<--full-route>
 
 Show intermediate stops of each connection.
+
+=item B<-j>, B<--with-jid>
+
+Show journey IDs. These can be used to obtain details on individual journeys
+via B<hafas-m>.
 
 =item B<-l>, B<--language> I<language>
 
