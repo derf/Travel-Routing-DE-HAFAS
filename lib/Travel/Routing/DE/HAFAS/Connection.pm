@@ -89,6 +89,9 @@ sub new {
 
 	my @sections;
 	for my $sec (@secL) {
+		if ( $sec->{type} eq 'WALK' and not $sec->{gis}{durS} ) {
+			next;
+		}
 		push(
 			@sections,
 			Travel::Routing::DE::HAFAS::Connection::Section->new(
