@@ -425,7 +425,15 @@ sub add_message {
 	}
 
 	for my $message ( @{ $self->{messages} } ) {
-		if ( $code eq $message->{code} and $text eq $message->{text} ) {
+		if (
+			(
+				not( not defined $code or not defined $message->{code} )
+				or $code eq $message->{code}
+			)
+			and ( not( not defined $text or not defined $message->{text} )
+				or $text eq $message->{text} )
+		  )
+		{
 			$message->{ref_count}++;
 			return $message;
 		}
