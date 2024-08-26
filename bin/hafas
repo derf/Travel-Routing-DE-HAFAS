@@ -273,7 +273,12 @@ sub format_delay {
 
 sub show_message {
 	my ($msg) = @_;
-	if ( $verbosity >= ( $min_verbosity{ $msg->type } // 0 ) ) {
+	if (
+		$msg->text
+		and ( not $msg->type
+			or $verbosity >= ( $min_verbosity{ $msg->type } // 0 ) )
+	  )
+	{
 		if ( $msg->short ) {
 			printf( "| %s\n", $msg->short );
 		}
@@ -451,9 +456,13 @@ for my $res ( $hafas->connections ) {
 			printf("\n???\n");
 		}
 		for my $msg ( $sec->messages ) {
-			if ( $msg->code eq 'text.connection.section.arrival.date.deviation'
-				or $msg->code eq
-				'text.connection.section.departure.date.deviation' )
+			if (
+				$msg->code
+				and ( $msg->code eq
+					'text.connection.section.arrival.date.deviation'
+					or $msg->code eq
+					'text.connection.section.departure.date.deviation' )
+			  )
 			{
 				next;
 			}
