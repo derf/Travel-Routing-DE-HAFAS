@@ -297,6 +297,12 @@ if ( my $err = $hafas->errstr ) {
 	{
 		show_similar_stops();
 	}
+	elsif ( $hafas->errcode and $hafas->errcode eq 'H890' ) {
+		say q{};
+		say 'HAFAS was unable to find suitable connections.';
+		say
+'Maybe your mode of transport (-m) or change (-c / -C) filters are too restrictive?';
+	}
 	exit 2;
 }
 
