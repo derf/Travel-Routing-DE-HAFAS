@@ -292,16 +292,20 @@ sub show_message {
 
 if ( my $err = $hafas->errstr ) {
 	say STDERR "Request error: ${err}";
-	if ( $hafas->errcode
-		and ( $hafas->errcode eq 'H730' or $hafas->errcode eq 'LOCATION' ) )
-	{
-		show_similar_stops();
-	}
-	elsif ( $hafas->errcode and $hafas->errcode eq 'H890' ) {
-		say q{};
-		say 'HAFAS was unable to find suitable connections.';
-		say
+	if ( $hafas->errcode ) {
+		if ( $hafas->errcode eq 'H730' or $hafas->errcode eq 'LOCATION' ) {
+			show_similar_stops();
+		}
+		elsif ( $hafas->errcode eq 'H890' ) {
+			say q{};
+			say 'HAFAS was unable to find suitable connections.';
+			say
 'Maybe your mode of transport (-m) or change (-c / -C) filters are too restrictive?';
+		}
+		elsif ( $hafas->errcode eq 'H9380' ) {
+			say q{};
+			say 'Arrival / departure / intermediate stops must not overlap.';
+		}
 	}
 	exit 2;
 }
