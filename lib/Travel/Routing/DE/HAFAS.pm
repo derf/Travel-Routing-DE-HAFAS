@@ -46,7 +46,7 @@ sub new {
 	}
 
 	if ( not defined $service ) {
-		$service = $conf{service} = 'DB';
+		confess("The service option is mandatory");
 	}
 
 	if ( defined $service and not exists $hafas_instance{$service} ) {
@@ -639,9 +639,9 @@ Request connections with scheduled changeover durations of at least I<minutes>.
 Note that this does not account for real-time data: the backend may return
 delayed connections that violate the specified changeover duration.
 
-=item B<service> => I<service>
+=item B<service> => I<service> (mandatory)
 
-Request results from I<service>, defaults to "DB".
+Request results from I<service>.
 See B<get_services> (and C<< hafas-m --list >>) for a list of supported
 services.
 
