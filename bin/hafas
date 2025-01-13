@@ -72,6 +72,9 @@ GetOptions(
 if ($list_services) {
 	printf( "%-40s %-14s %s\n\n", 'operator', 'abbr. (-s)', 'languages (-l)' );
 	for my $service ( Travel::Routing::DE::HAFAS::get_services() ) {
+		if ( $service->{shortname} eq 'DB' ) {
+			next;
+		}
 		printf(
 			"%-40s %-14s %s\n",
 			@{$service}{qw(name shortname)},
