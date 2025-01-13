@@ -527,6 +527,7 @@ Travel::Routing::DE::HAFAS - Interface to HAFAS itinerary services
 	use Travel::Routing::DE::HAFAS;
 
 	my $hafas = Travel::Routing::DE::HAFAS->new(
+		service => 'VRN',
 		from_stop => 'Eichlinghofen H-Bahn, Dortmund',
 		to_stop => 'Essen-Kupferdreh',
 	);
@@ -573,6 +574,12 @@ I<%opt> were passed. I<%opt> must contain B<from_stop> and B<to_stop> and
 supports the following additional flags:
 
 =over
+
+=item B<service> => I<service> (mandatory)
+
+Request results from I<service>.
+See B<get_services> (and C<< hafas-m --list >>) for a list of supported
+services.
 
 =item B<from_stop> => I<stop> (mandatory)
 
@@ -638,12 +645,6 @@ Request connections with no more than I<count> changeovers.
 Request connections with scheduled changeover durations of at least I<minutes>.
 Note that this does not account for real-time data: the backend may return
 delayed connections that violate the specified changeover duration.
-
-=item B<service> => I<service> (mandatory)
-
-Request results from I<service>.
-See B<get_services> (and C<< hafas-m --list >>) for a list of supported
-services.
 
 =back
 
@@ -737,7 +738,7 @@ None.
 
 =head1 BUGS AND LIMITATIONS
 
-The non-default services (anything other than DB) are not well tested.
+Some HAFAS services are not well-tested.
 
 =head1 SEE ALSO
 
