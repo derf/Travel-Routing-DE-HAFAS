@@ -1,4 +1,4 @@
-Travel::Routing::DE::HAFAS 0.10 - Sun Jan 19 2024
+Travel::Routing::DE::HAFAS 0.10 - Sun Jan 19 2025
 
     * DB HAFAS is dead.
     * hafas: Use VRN by default and adjust documentation.
