@@ -437,10 +437,10 @@ sub add_message {
 	for my $message ( @{ $self->{messages} } ) {
 		if (
 			(
-				not( not defined $code or not defined $message->{code} )
+				not( defined $code and defined $message->{code} )
 				or $code eq $message->{code}
 			)
-			and ( not( not defined $text or not defined $message->{text} )
+			and ( not( defined $text and defined $message->{text} )
 				or $text eq $message->{text} )
 		  )
 		{
