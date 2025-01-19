@@ -559,8 +559,7 @@ version 0.09
 =head1 DESCRIPTION
 
 Travel::Routing::DE::HAFAS is an interface to HAFAS itinerary services
-using the mgate.exe interface. It works best with the legacy instance of
-Deutsche Bahn, but supports other transit services as well.
+using the mgate.exe interface.
 
 =head1 METHODS
 
