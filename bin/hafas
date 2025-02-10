@@ -70,15 +70,22 @@ GetOptions(
 ) or show_help(1);
 
 if ($list_services) {
-	printf( "%-40s %-14s %s\n\n", 'operator', 'abbr. (-s)', 'languages (-l)' );
+	printf(
+		"%-40s  %-14s %-15s %s\n\n",
+		'operator', 'abbr. (-s)', 'languages (-l)',
+		'time zone'
+	);
 	for my $service ( Travel::Routing::DE::HAFAS::get_services() ) {
 		if ( $service->{shortname} eq 'DB' ) {
 			next;
 		}
 		printf(
-			"%-40s %-14s %s\n",
-			@{$service}{qw(name shortname)},
-			join( q{ }, @{ $service->{languages} // [] } )
+			"%-40s%1s %-14s %-15s %s\n",
+			$service->{name},
+			$service->{geoip_lock} ? q{!} : q{ },
+			$service->{shortname},
+			join( q{ }, @{ $service->{languages} // [] } ),
+			$service->{time_zone} // q{},
 		);
 	}
 	exit 0;
@@ -552,6 +559,10 @@ Note that requesting an invalid/unsupported language may lead to garbage output.
 
 List known HAFAS installations and exit. Use B<-s>|B<--service> to select an
 operator from this list for a HAFAS request.
+
+Instances marked with an exclamation mark (C<< ! >>) are behind a GeoIP filter
+and may need a proxy to work. See the documentation of get_active_service in
+Travel::Status::DE::HAFAS(3pm) for details.
 
 =item B<-m>, B<--mot> I<motlist>
 
