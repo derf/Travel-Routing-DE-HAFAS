@@ -28,11 +28,11 @@ Debian repository and are not covered by its quality assurance process.
 To install the latest release, run:
 
 ```
-wget https://lib.finalrewind.org/deb/libtravel-status-de-deutschebahn-perl_latest_all.deb \
+wget https://lib.finalrewind.org/deb/libtravel-status-de-hafas-perl_latest_all.deb \
      https://lib.finalrewind.org/deb/libtravel-routing-de-hafas-perl_latest_all.deb
-sudo apt install ./libtravel-status-de-deutschebahn-perl_latest_all.deb \
+sudo apt install ./libtravel-status-de-hafas-perl_latest_all.deb \
                  ./libtravel-routing-de-hafas-perl_latest_all.deb
-rm libtravel-status-de-deutschebahn-perl_latest_all.deb \
+rm libtravel-status-de-hafas-perl_latest_all.deb \
    libtravel-routing-de-hafas-perl_latest_all.deb
 ```
 
