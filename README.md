@@ -172,3 +172,12 @@ docker run --rm derfnull/hafas:latest --version
 
 Documentation is not available in this image. Please refer to the
 [online hafas manual](https://man.finalrewind.org/1/hafas/) instead.
+
+## References
+
+Mirrors of the hafas / Travel::Routing::DE::HAFAS repository are available at
+
+* [Chaosdorf](https://chaosdorf.de/git/derf/travel-routing-de-hafas)
+* [Codeberg](https://codeberg.org/derf/Travel-Routing-DE-HAFAS/)
+* [Finalrewind](https://git.finalrewind.org/derf/Travel-Routing-DE-HAFAS/)
+* [GitHub](https://github.com/derf/travel-routing-de-hafas)
