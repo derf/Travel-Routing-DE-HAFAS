@@ -339,7 +339,7 @@ Travel::Routing::DE::HAFAS(3pm), Travel::Routing::DE::HAFAS::Connection::Section
 
 =head1 AUTHOR
 
-Copyright (C) 2023 by Birte Kristina Friesel E<lt>derf@finalrewind.orgE<gt>
+Copyright (C) 2023-2026 by Birte Kristina Friesel E<lt>derf@finalrewind.orgE<gt>
 
 =head1 LICENSE
 

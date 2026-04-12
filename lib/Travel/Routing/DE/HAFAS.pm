@@ -745,7 +745,7 @@ Travel::Routing::DE::HAFAS::Connection(3pm)
 
 =head1 AUTHOR
 
-Copyright (C) 2023-2024 by Birte Kristina Friesel E<lt>derf@finalrewind.orgE<gt>
+Copyright (C) 2023-2026 by Birte Kristina Friesel E<lt>derf@finalrewind.orgE<gt>
 
 =head1 LICENSE
 
