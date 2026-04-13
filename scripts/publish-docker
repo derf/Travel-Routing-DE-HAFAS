@@ -12,9 +12,9 @@ git submodule update --init
 
 git checkout "${VERSION}"
 
-docker build --no-cache -t dbris-m:${VERSION} .
-docker build -t dbris-m:latest .
-docker tag dbris-m:${VERSION} derfnull/dbris-m:${VERSION}
-docker tag dbris-m:latest derfnull/dbris-m:latest
-docker push derfnull/dbris-m:${VERSION}
-docker push derfnull/dbris-m:latest
+docker build --no-cache -t hafas-m:${VERSION} .
+docker build -t hafas-m:latest .
+docker tag hafas-m:${VERSION} derfnull/hafas-m:${VERSION}
+docker tag hafas-m:latest derfnull/hafas-m:latest
+docker push derfnull/hafas-m:${VERSION}
+docker push derfnull/hafas-m:latest
