@@ -20,7 +20,7 @@ scripts/makedeb-docker
 
 chmod 644 "${OUTFILE}"
 mv "${OUTFILE}" "${DEBFILE}"
-ln -s "${BASE}-perl_${VERSION}-1_all.deb" /var/www/html/deb/${BASE}-perl_latest.deb
+ln -fs "${BASE}-perl_${VERSION}-1_all.deb" /var/www/html/deb/${BASE}-perl_latest.deb
 aptly repo add finalrewind "${DEBFILE}"
 aptly publish update stable
 chmod -R a+rX ~/.aptly/public
