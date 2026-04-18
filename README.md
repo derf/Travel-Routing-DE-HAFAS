@@ -13,7 +13,7 @@ You have five installation options:
 * finalrewind.org APT repository for Debian-based distributions
 * Installing the latest release from CPAN
 * Installation from source
-* Using a Docker image
+* Using a Docker image (amd64 or arm64)
 
 Except for Docker, **hafas** is available in your PATH after installation.
 You can run `hafas --version` to verify this. Documentation is available via
@@ -153,9 +153,9 @@ perl -Ilocal/lib/perl5 -Ilib bin/hafas --version
 
 ### Running hafas via Docker
 
-A hafas image is available on Docker Hub. It is intended for testing
-purposes: due to the latencies involved in spawning a container for each
-hafas invocation, it is less convenient for day-to-day usage.
+**hafas** images for amd64 and arm64 are available on Docker Hub.
+They are intended for testing purposes:
+due to the latencies involved in spawning a container for each hafas invocation and lack of caching, they are less convenient for day-to-day use.
 
 Installation:
 
@@ -163,8 +163,7 @@ Installation:
 docker pull derfnull/hafas:latest
 ```
 
-Use it by prefixing hafas commands with `docker run --rm
-derfnull/hafas:latest`, like so:
+Use the image by prefixing hafas commands with `docker run --rm derfnull/hafas:latest`, like so:
 
 ```
 docker run --rm derfnull/hafas:latest --version
@@ -177,7 +176,6 @@ Documentation is not available in this image. Please refer to the
 
 Mirrors of the hafas / Travel::Routing::DE::HAFAS repository are available at
 
-* [Chaosdorf](https://chaosdorf.de/git/derf/travel-routing-de-hafas)
 * [Codeberg](https://codeberg.org/derf/Travel-Routing-DE-HAFAS/)
 * [Finalrewind](https://git.finalrewind.org/derf/Travel-Routing-DE-HAFAS/)
 * [GitHub](https://github.com/derf/travel-routing-de-hafas)
